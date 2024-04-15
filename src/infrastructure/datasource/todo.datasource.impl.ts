@@ -1,5 +1,5 @@
 import { prisma } from "../../data/sqlserver";
-import { CreateTodoDto, TodoDatasource, TodoEntity, UpdateTodoDto } from "../../domains";
+import { CreateTodoDto, TodoDatasource, TodoEntity, UpdateTodoDto } from "../../domain";
 
 
 export class TodoDatasourceImpl implements TodoDatasource {

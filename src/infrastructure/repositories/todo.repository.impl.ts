@@ -1,4 +1,4 @@
-import { CreateTodoDto, TodoDatasource, TodoEntity, TodoRepository, UpdateTodoDto } from "../../domains";
+import { CreateTodoDto, TodoDatasource, TodoEntity, TodoRepository, UpdateTodoDto } from "../../domain";
 
 
 export class TodoRepositoryImpl implements TodoRepository {
