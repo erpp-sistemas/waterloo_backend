@@ -5,12 +5,46 @@ generator client {
 datasource db {
   provider = "sqlserver"
   url      = env("DATABASE_URL")
-  // provider = "postgresql"
-  // url      = env("POSTGRES_URL")
 }
 
 model todo {
-  id          Int      @id @default(autoincrement())
-  text        String   @db.NVarChar(100)
-  completedAt DateTime? @db.DateTime()
+  id          Int       @id @default(autoincrement())
+  completedAt DateTime? @db.DateTime
+  text        String    @db.NVarChar(100)
+}
+
+model usuario {
+  id                Int           @id(map: "PK__usuario__3213E83FF649C689") @default(autoincrement())
+  usuario           String?       @db.NVarChar(80)
+  password          String?       @db.NVarChar(20)
+  correo            String?       @db.NVarChar(40)
+  nombre            String?       @db.NVarChar(90)
+  url_foto          String?       @db.NVarChar(255)
+  apellido_paterno  String?       @db.NVarChar(100)
+  apellido_materno  String?       @db.NVarChar(100)
+  sexo              String?       @db.NVarChar(20)
+  activo            Int?
+  telefono_personal String?       @db.NVarChar(20)
+  id_user_push      String?       @db.NVarChar(100)
+  access_app_web    Int?
+  access_app_movil  Int?
+  usuario_rol       usuario_rol[]
+}
+
+model rol {
+  id          Int           @id(map: "PK__rol__3213E83F2E06AB77") @default(autoincrement())
+  nombre      String        @db.NVarChar(100)
+  activo      Int?          @default(1, map: "DF__rol__activo__5165187F")
+  icon        String?       @db.NVarChar(100)
+  color       String?       @db.NVarChar(7)
+  usuario_rol usuario_rol[]
+}
+
+
+model usuario_rol {
+  id         Int      @id(map: "PK__usuario___3213E83F82D52C49") @default(autoincrement())
+  id_usuario Int?
+  id_rol     Int?
+  rol        rol?     @relation(fields: [id_rol], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_id_rol124")
+  usuario    usuario? @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_id_usuario124")
 }
