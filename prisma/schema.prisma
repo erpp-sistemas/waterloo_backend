@@ -45,6 +45,6 @@ model usuario_rol {
   id         Int      @id(map: "PK__usuario___3213E83F82D52C49") @default(autoincrement())
   id_usuario Int?
   id_rol     Int?
-  rol        rol?     @relation(fields: [id_rol], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_id_rol124")
-  usuario    usuario? @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_id_usuario124")
+  rol        rol?     @relation(fields: [id_rol], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "fk_id_rol124")
+  usuario    usuario? @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "fk_id_usuario124")
 }
