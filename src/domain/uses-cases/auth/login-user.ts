@@ -11,11 +11,11 @@ interface LoginUserUseCase {
 export class LoginUser implements LoginUserUseCase {
     
     constructor(
-        private readonly repository: UserRepository
+        private readonly userRepository: UserRepository
     ){}
 
     execute(dto: LoginUserDto): Promise<UserEntity> {
-        return this.repository.loginUser(dto)
+        return this.userRepository.loginUser(dto)
     }
 
 }

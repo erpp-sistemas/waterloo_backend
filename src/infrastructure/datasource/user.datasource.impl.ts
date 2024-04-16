@@ -1,3 +1,5 @@
+import { Ecnrypt } from "../../config/encrypt.adapter";
+import { JwtAdapter } from "../../config/jwt.adapter";
 import { prisma } from "../../data/sqlserver";
 import { CustomError, LoginUserDto, UserEntity } from "../../domain";
 import { UserDatasource } from "../../domain/datasources/user.datasource";
@@ -12,18 +14,37 @@ export class UserDatasourceImpl implements UserDatasource {
         const user = await prisma.usuario.findFirst({
             where: { usuario: registerUserDto.usuario }
         })
-        if(user) throw CustomError.badRequest('Email already exists');
+        if (user) throw CustomError.badRequest('Email already exists');
+
+        registerUserDto.password = Ecnrypt.hash(registerUserDto.password)
 
         const newUser = await prisma.usuario.create({
             data: registerUserDto
         })
 
-        return UserEntity.fromObject(newUser)
+        const token = 'ABC'
+
+        const { password, ...userEntity } = UserEntity.fromObject({ ...newUser, token });
+
+        return UserEntity.fromObject(userEntity)
     }
 
-    async loginUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
 
-        return new UserEntity(0, '', '', '', '', '', '', 0, 0, 0, '')
+    async loginUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
+        const user = await prisma.usuario.findFirst({
+            where: { usuario: loginUserDto.usuario }
+        })
+        if (!user) throw CustomError.badRequest('Email not exist');
+
+        const isMatching = Ecnrypt.compare(loginUserDto.password, user.password!);
+        if (!isMatching) throw CustomError.badRequest('Password is not valid');
+
+        const token = await JwtAdapter.generateToken({ id: user.id, email: user.usuario });
+        if (!token) throw CustomError.internalServer('Error while creating JWT');
+
+        const { password, ...userEntity } = UserEntity.fromObject({ ...user, token });
+
+        return UserEntity.fromObject(userEntity)
 
     }
 

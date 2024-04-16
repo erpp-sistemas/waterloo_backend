@@ -19,6 +19,7 @@ export class RegisterUserDto {
         if( !password ) return ['Missing password']
         if( !nombre ) return ['Missing nombre']
         if( !apellido_paterno ) return ['Missing apellido paterno']
+        
 
         return [undefined, new RegisterUserDto(usuario, password, nombre, apellido_paterno)]
 

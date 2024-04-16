@@ -16,7 +16,7 @@ model todo {
 model usuario {
   id                Int           @id(map: "PK__usuario__3213E83FF649C689") @default(autoincrement())
   usuario           String?       @db.NVarChar(80)
-  password          String?       @db.NVarChar(20)
+  password          String?       @db.NVarChar(255)
   correo            String?       @db.NVarChar(40)
   nombre            String?       @db.NVarChar(90)
   url_foto          String?       @db.NVarChar(255)

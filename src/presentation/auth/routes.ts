@@ -15,7 +15,7 @@ export class AuthRoutes {
         // todo implementar datasource y repository
         const datasource = new UserDatasourceImpl();
         const userRepository = new UserRepositoryImpl(datasource)
-        const userController = new  AuthController(userRepository)
+        const userController = new AuthController(userRepository)
     
         router.post('/register', userController.registerUser)
         router.post('/login', userController.loginUser)
