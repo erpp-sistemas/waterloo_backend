@@ -1,4 +1,4 @@
-import { Ecnrypt } from "../../config/encrypt.adapter";
+import { Encrypt } from "../../config/encrypt.adapter";
 import { JwtAdapter } from "../../config/jwt.adapter";
 import { prisma } from "../../data/sqlserver";
 import { CustomError, LoginUserDto, UserEntity } from "../../domain";
@@ -16,7 +16,7 @@ export class UserDatasourceImpl implements UserDatasource {
         })
         if (user) throw CustomError.badRequest('Email already exists');
 
-        registerUserDto.password = Ecnrypt.hash(registerUserDto.password)
+        registerUserDto.password = Encrypt.hash(registerUserDto.password)
 
         const newUser = await prisma.usuario.create({
             data: registerUserDto
@@ -36,7 +36,7 @@ export class UserDatasourceImpl implements UserDatasource {
         })
         if (!user) throw CustomError.badRequest('Email not exist');
 
-        const isMatching = Ecnrypt.compare(loginUserDto.password, user.password!);
+        const isMatching = Encrypt.compare(loginUserDto.password, user.password!);
         if (!isMatching) throw CustomError.badRequest('Password is not valid');
 
         const token = await JwtAdapter.generateToken({ id: user.id, email: user.usuario });

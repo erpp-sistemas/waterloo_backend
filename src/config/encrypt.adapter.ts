@@ -1,7 +1,7 @@
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 
 
-export class Ecnrypt {
+export class Encrypt {
 
     static hash(password: string) {
         const salt = genSaltSync();
