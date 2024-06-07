@@ -7,44 +7,690 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model todo {
-  id          Int       @id @default(autoincrement())
-  completedAt DateTime? @db.DateTime
-  text        String    @db.NVarChar(100)
+model asignacion_campana {
+  id_asignacion      Int      @id(map: "PK_id_asignacion") @default(autoincrement())
+  id_usuario         Int
+  id_contribuyente   String   @db.NVarChar(100)
+  id_campana         Int
+  id_proceso         Int
+  id_modulo          Int
+  fecha_asignacion   DateTime @db.DateTime
+  estatus_asignacion Int
+  campanas           campanas @relation(fields: [id_campana], references: [id], onUpdate: NoAction, map: "fk_id_campana_asignacion")
+  modulos            modulos  @relation(fields: [id_modulo], references: [id_modulo], onUpdate: NoAction, map: "fk_id_modulo_asignacion")
+  procesos           procesos @relation(fields: [id_proceso], references: [id], onUpdate: NoAction, map: "fk_id_proceso_asignacion")
+  usuario            usuario  @relation(fields: [id_usuario], references: [id], onUpdate: NoAction, map: "fk_id_usuario_asignacion")
 }
 
-model usuario {
-  id                Int           @id(map: "PK__usuario__3213E83FF649C689") @default(autoincrement())
-  usuario           String?       @db.NVarChar(80)
-  password          String?       @db.NVarChar(255)
-  correo            String?       @db.NVarChar(40)
-  nombre            String?       @db.NVarChar(90)
-  url_foto          String?       @db.NVarChar(255)
-  apellido_paterno  String?       @db.NVarChar(100)
-  apellido_materno  String?       @db.NVarChar(100)
-  sexo              String?       @db.NVarChar(20)
-  activo            Int?
-  telefono_personal String?       @db.NVarChar(20)
-  id_user_push      String?       @db.NVarChar(100)
-  access_app_web    Int?
-  access_app_movil  Int?
-  usuario_rol       usuario_rol[]
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model asignacion_excel {
+  id_asignacion_excel Int       @default(autoincrement())
+  id_afiliado         Int?
+  id_campana          Int?
+  nombre_campana      String?   @db.NVarChar(255)
+  municipio           String?   @db.NVarChar(255)
+  estado              String?   @db.NVarChar(255)
+  id_proceso          Int?
+  nombre_proceso      String?   @db.NVarChar(255)
+  id_usuario          Int?
+  username            String?   @db.NVarChar(255)
+  fecha               DateTime? @db.DateTime
+  estatus             String?   @db.NVarChar(100)
+
+  @@ignore
 }
 
-model rol {
-  id          Int           @id(map: "PK__rol__3213E83F2E06AB77") @default(autoincrement())
-  nombre      String        @db.NVarChar(100)
-  activo      Int?          @default(1, map: "DF__rol__activo__5165187F")
+model atendera_apoyo {
+  id_atendera Int       @id(map: "PK__atendera__A973F0FDCF49DB9B") @default(autoincrement())
+  id_usuario  Int?
+  id_campana  Int?
+  campanas    campanas? @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_campana")
+  usuario     usuario?  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_usuario")
+}
+
+model campana_proceso {
+  id_campana_proceso Int      @id(map: "PK_id_campana_proceso") @default(autoincrement())
+  id_campana         Int
+  id_proceso         Int
+  activo             Boolean? @default(true, map: "DF__campana_p__activ__208CD6FA")
+  campanas           campanas @relation(fields: [id_campana], references: [id], onUpdate: NoAction, map: "FK_campana_proceso_campana")
+  procesos           procesos @relation(fields: [id_proceso], references: [id], onUpdate: NoAction, map: "FK_campana_proceso_proceso")
+}
+
+model campana_servicio_layer_estilo {
+  id               Int            @id(map: "PK__campana___3213E83F4E8A15E8") @default(autoincrement())
+  id_campana       Int
+  id_servicio_mapa Int
+  id_layer         Int
+  id_estilo        Int
+  url_geoserver    String?        @db.NVarChar(Max)
+  campanas         campanas       @relation(fields: [id_campana], references: [id], onUpdate: NoAction, map: "FK_campana_servicio_layer_estilo_campana")
+  estilo_layer     estilo_layer   @relation(fields: [id_estilo], references: [id_estilo], onUpdate: NoAction, map: "FK_campana_servicio_layer_estilo_estilo")
+  layer            layer          @relation(fields: [id_layer], references: [id], onUpdate: NoAction, map: "FK_campana_servicio_layer_estilo_layer")
+  servicios_mapa   servicios_mapa @relation(fields: [id_servicio_mapa], references: [id_servicio_mapa], onUpdate: NoAction, map: "FK_campana_servicio_layer_estilo_ser_mapa")
+}
+
+model campanas {
+  id                            Int                             @id(map: "PK_campanas") @default(autoincrement())
+  nombre                        String                          @db.NVarChar(150)
+  logo                          String?                         @default("https://firebasestorage.googleapis.com/v0/b/waterloo-6e309.appspot.com/o/images%2Fusuarios%2FERPP?alt=media&token=fb73957a-68ea-4e76-bd8c-5170f3c949ee", map: "DF_campanas_logo") @db.NVarChar(255)
+  latitud                       Decimal                         @db.Decimal(19, 6)
+  longitud                      Decimal                         @db.Decimal(19, 6)
+  estado_republica              String                          @db.NVarChar(100)
+  activo                        Int                             @default(1, map: "DF_campanas_activo")
+  municipio                     String                          @db.NVarChar(100)
+  radius                        Int?                            @default(0, map: "DF_campanas_radius")
+  id_horario                    Int
+  asignacion_campana            asignacion_campana[]
+  atendera_apoyo                atendera_apoyo[]
+  campana_proceso               campana_proceso[]
+  campana_servicio_layer_estilo campana_servicio_layer_estilo[]
+  horario                       horario                         @relation(fields: [id_horario], references: [id_horario], onUpdate: NoAction, map: "FK_campana_horario")
+  campanas_zonas                campanas_zonas[]
+  cat_templates_whatsapp        cat_templates_whatsapp[]
+  contribuyente                 contribuyente[]
+  encargados_zona               encargados_zona[]
+  foto_registro_contribuyente   foto_registro_contribuyente[]
+  foto_seguimiento_gestion      foto_seguimiento_gestion[]
+  layer_filtro                  layer_filtro[]
+  meta                          meta[]
+  oficina_enlace                oficina_enlace[]
+  register_whatsapp_send        register_whatsapp_send[]
+  registro_asistencia           registro_asistencia[]
+  registro_contribuyente        registro_contribuyente[]
+  registro_seguimiento_gestion  registro_seguimiento_gestion[]
+  usuario_campana_procesos      usuario_campana_procesos[]
+  whatsapp_messages             whatsapp_messages[]
+}
+
+model campanas_zonas {
+  id         Int      @id(map: "PK__campanas__3213E83F1CFCF4E5") @default(autoincrement())
+  id_campana Int
+  id_zona    Int
+  campanas   campanas @relation(fields: [id_campana], references: [id], onUpdate: NoAction, map: "FK_campana_zonas_campana")
+  zona       zona     @relation(fields: [id_zona], references: [id], onUpdate: NoAction, map: "FK_campana_zonas_zona")
+}
+
+model cat_asunto_oficina_enlace {
+  id_asunto Int       @id(map: "PK_id_asunto") @default(autoincrement())
+  asunto    String?   @db.NVarChar(100)
+  status    Int?      @default(1, map: "DF__cat_asunt__statu__2D12A970")
+  create_at DateTime? @default(now(), map: "DF__cat_asunt__creat__2E06CDA9") @db.DateTime
+}
+
+model cat_estatus_asistencia {
+  id                                                                                 Int                   @id(map: "PK__cat_esta__3213E83F125D3D41") @default(autoincrement())
+  estatus                                                                            String?               @db.NVarChar(100)
+  registro_asistencia_registro_asistencia_id_estatus_salidaTocat_estatus_asistencia  registro_asistencia[] @relation("registro_asistencia_id_estatus_salidaTocat_estatus_asistencia")
+  registro_asistencia_registro_asistencia_id_estatus_entradaTocat_estatus_asistencia registro_asistencia[] @relation("registro_asistencia_id_estatus_entradaTocat_estatus_asistencia")
+}
+
+model cat_estatus_cita {
+  id_estatus_cita Int     @id(map: "PK_id_estatus_cita") @default(autoincrement())
+  estatus         String? @db.NVarChar(100)
+}
+
+model cat_estatus_punto_asistencia {
+  id                                                                                             Int                   @id(map: "PK__cat_esta__3213E83FB59066E0") @default(autoincrement())
+  estatus                                                                                        String                @db.NVarChar(100)
+  registro_asistencia_registro_asistencia_id_estatus_punto_entradaTocat_estatus_punto_asistencia registro_asistencia[] @relation("registro_asistencia_id_estatus_punto_entradaTocat_estatus_punto_asistencia")
+  registro_asistencia_registro_asistencia_id_estatus_punto_salidaTocat_estatus_punto_asistencia  registro_asistencia[] @relation("registro_asistencia_id_estatus_punto_salidaTocat_estatus_punto_asistencia")
+}
+
+model cat_rol {
+  id_rol      Int           @id(map: "PK_id_rol") @default(autoincrement())
+  nombre      String?       @db.VarChar(250)
+  activo      Boolean?
   icon        String?       @db.NVarChar(100)
   color       String?       @db.NVarChar(7)
+  menu_rol    menu_rol[]
+  submenu_rol submenu_rol[]
   usuario_rol usuario_rol[]
 }
 
+model cat_templates_whatsapp {
+  id_template            Int                      @id(map: "PK__cat_temp__97B30205D2A60A8E") @default(autoincrement())
+  name                   String                   @db.NVarChar(100)
+  display                String                   @db.NVarChar(100)
+  id_tipo_template       Int
+  activo                 Int                      @default(1, map: "DF__cat_templ__activ__2F9A1060")
+  icono                  String?                  @db.NVarChar(100)
+  id_campana             Int
+  url_image              String?                  @db.NVarChar(255)
+  has_text               Int?
+  campanas               campanas                 @relation(fields: [id_campana], references: [id], onUpdate: NoAction, map: "FK_cat_templates_whatsapp_campana")
+  cat_tipo_template      cat_tipo_template        @relation(fields: [id_tipo_template], references: [id_tipo_template], onUpdate: NoAction, map: "FK_cat_templates_whatsapp_tipo_temp")
+  register_whatsapp_send register_whatsapp_send[]
+  whatsapp_messages      whatsapp_messages[]
+}
+
+model cat_tipo_foto_registro {
+  id   Int     @id(map: "PK__cat_tipo__3213E83FD47DC70A") @default(autoincrement())
+  tipo String? @db.NVarChar(100)
+}
+
+model cat_tipo_template {
+  id_tipo_template       Int                      @id(map: "PK__cat_tipo__2CBB8ED5758E8D9E") @default(autoincrement())
+  name                   String                   @db.NVarChar(100)
+  activo                 Int                      @default(1, map: "DF__cat_tipo___activ__2CBDA3B5")
+  cat_templates_whatsapp cat_templates_whatsapp[]
+}
+
+model cita_finalizada {
+  id                Int            @id(map: "PK__cita_fin__3213E83F4C8A1633") @default(autoincrement())
+  id_oficina_enlace Int
+  observaciones     String?        @db.NVarChar(255)
+  fecha             DateTime?      @default(now(), map: "DF__cita_fina__fecha__795DFB40") @db.DateTime
+  oficina_enlace    oficina_enlace @relation(fields: [id_oficina_enlace], references: [id_oficina_enlace], onUpdate: NoAction, map: "FK_cita_finalizada_oficina_enlace")
+}
+
+model contador_asignacion {
+  id               Int       @id(map: "PK_id_contador_asignacion") @default(autoincrement())
+  numero_registros Int?
+  fecha            DateTime? @db.DateTime
+}
+
+model contribuyente {
+  id                          Int                           @default(autoincrement())
+  id_contribuyente            String                        @id(map: "PK_id_contribuyente") @db.NVarChar(100)
+  nombre                      String                        @db.NVarChar(100)
+  segundo_nombre              String?                       @db.NVarChar(100)
+  apellido_paterno            String                        @db.NVarChar(100)
+  apellido_materno            String                        @db.NVarChar(100)
+  edad                        Int
+  fecha_nacimiento            DateTime?                     @db.Date
+  clave_elector               String?                       @db.NVarChar(20)
+  seccion                     Int?
+  curp                        String?                       @db.NVarChar(20)
+  numero_celular              String?                       @db.NVarChar(20)
+  numero_local                String?                       @db.NVarChar(20)
+  correo                      String?                       @db.NVarChar(100)
+  calle                       String?                       @db.NVarChar(255)
+  num_ext                     String?                       @db.NVarChar(100)
+  num_int                     String?                       @db.NVarChar(100)
+  colonia                     String?                       @db.NVarChar(100)
+  codigo_postal               Int?
+  latitud                     Decimal?                      @db.Decimal(19, 6)
+  longitud                    Decimal?                      @db.Decimal(19, 6)
+  foto_ine_frente             String?                       @db.NVarChar(255)
+  foto_ine_trasera            String?                       @db.NVarChar(255)
+  id_campana                  Int
+  fecha_ingreso               DateTime                      @db.DateTime
+  foto_persona                String?                       @db.NVarChar(255)
+  vigencia                    String?                       @db.NVarChar(50)
+  campanas                    campanas                      @relation(fields: [id_campana], references: [id], onUpdate: NoAction, map: "FK_contribuyente_campana")
+  foto_registro_contribuyente foto_registro_contribuyente[]
+  registro_contribuyente      registro_contribuyente[]
+}
+
+model direccionGeocoding {
+  id       Int       @id(map: "PK__direccio__3213E83FC5566930") @default(autoincrement())
+  cuenta   String?   @db.NVarChar(50)
+  calle    String?   @db.NVarChar(150)
+  numero   String?   @db.NVarChar(50)
+  cp       String?   @db.NVarChar(10)
+  distrito String?   @db.NVarChar(150)
+  ciudad   String?   @db.NVarChar(150)
+  estado   String?   @db.NVarChar(150)
+  pais     String?   @db.NVarChar(150)
+  latitud  Decimal?  @db.Decimal(18, 6)
+  longitud Decimal?  @db.Decimal(18, 6)
+  fecha    DateTime? @db.DateTime
+}
+
+model directorio {
+  id_directorio             Int     @id(map: "PK__director__B45C4B70586C67BD") @default(autoincrement())
+  nombre_empleado           String  @db.NVarChar(100)
+  apellido_paterno_empleado String? @db.NVarChar(100)
+  apellido_materno_empleado String? @db.NVarChar(100)
+  puesto                    String  @db.NVarChar(100)
+  telefono                  String  @db.NVarChar(20)
+  email                     String? @db.NVarChar(100)
+  area                      String? @db.NVarChar(100)
+}
+
+model encargados_zona {
+  id         Int      @id(map: "PK__encargad__3213E83FDE7C8359") @default(autoincrement())
+  id_usuario Int
+  id_zona    Int
+  id_campana Int
+  campanas   campanas @relation(fields: [id_campana], references: [id], onUpdate: NoAction, map: "FK_encargados_zona_campana")
+  usuario    usuario  @relation(fields: [id_usuario], references: [id], onUpdate: NoAction, map: "FK_encargados_zona_usuario")
+  zona       zona     @relation(fields: [id_zona], references: [id], onUpdate: NoAction, map: "FK_encargados_zona_zona")
+}
+
+model estilo_layer {
+  id_estilo                     Int                             @id(map: "PK__estilo_l__478DDD2908305D3C") @default(autoincrement())
+  color                         String?                         @db.NVarChar(20)
+  opacidad                      Decimal?                        @db.Decimal(16, 2)
+  tipo                          String?                         @db.NVarChar(100)
+  activo                        Int?                            @default(1, map: "DF_estilo_layer_activo")
+  visibilidad                   String?                         @default("none", map: "DF_estilo_layer_visible") @db.NVarChar(100)
+  campana_servicio_layer_estilo campana_servicio_layer_estilo[]
+  usuario_layer_mapa            usuario_layer_mapa[]
+}
+
+model filtro {
+  id_filtro     Int            @id(map: "PK_id_filtro") @default(autoincrement())
+  nombre_filtro String?        @db.NVarChar(100)
+  etiqueta      String?        @db.NVarChar(100)
+  activo        Int?           @default(1, map: "DF__filtro__activo__44CA3770")
+  layer_filtro  layer_filtro[]
+}
+
+model foto_registro_contribuyente {
+  id_foto_registro     Int            @id(map: "PK__foto_reg__29DDE21A2B741D78") @default(autoincrement())
+  id_contribuyente     String?        @db.NVarChar(100)
+  url_foto             String?        @db.NVarChar(255)
+  tipo                 String?        @db.NVarChar(100)
+  fecha                DateTime?      @db.DateTime
+  id_proceso           Int?
+  id_usuario           Int?
+  id_campana           Int?
+  nombre_foto          String?        @db.NVarChar(100)
+  activo               Int?
+  fecha_sincronizacion DateTime?      @db.DateTime
+  campanas             campanas?      @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_foto_contribuyente_campana")
+  contribuyente        contribuyente? @relation(fields: [id_contribuyente], references: [id_contribuyente], onDelete: NoAction, onUpdate: NoAction, map: "FK_foto_contribuyente_contribuyente")
+  procesos             procesos?      @relation(fields: [id_proceso], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_foto_contribuyente_proceso")
+  usuario              usuario?       @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_foto_contribuyente_usuario")
+}
+
+model foto_seguimiento_gestion {
+  id                           Int                           @id(map: "PK__foto_seg__3213E83FF9594B3C") @default(autoincrement())
+  id_seguimiento               String?                       @db.NVarChar(100)
+  id_campana                   Int
+  id_usuario                   Int
+  url_foto                     String?                       @db.NVarChar(Max)
+  tipo                         String?                       @db.NVarChar(100)
+  fecha                        DateTime?                     @db.DateTime
+  imageName                    String?                       @db.NVarChar(255)
+  registro_seguimiento_gestion registro_seguimiento_gestion? @relation(fields: [id_seguimiento], references: [id_seguimiento], onDelete: NoAction, onUpdate: NoAction, map: "FK_seg_gest_reg_seg")
+  campanas                     campanas                      @relation(fields: [id_campana], references: [id], onUpdate: NoAction, map: "FK_seguimiento_gestion_campana")
+  usuario                      usuario                       @relation(fields: [id_usuario], references: [id], onUpdate: NoAction, map: "FK_seguimiento_gestion_usuario")
+}
+
+model horario {
+  id_horario              Int        @id(map: "PK__horario__C5836D690056DE2E") @default(autoincrement())
+  horario_entrada         String?    @db.NVarChar(100)
+  horario_salida          String?    @db.NVarChar(100)
+  activo                  Int?       @default(1, map: "DF__horario__activo__558AAF1E")
+  hora_entrada_tolerancia String?    @db.NVarChar(100)
+  campanas                campanas[]
+}
+
+model layer {
+  id                            Int                             @id(map: "PK__layer__3213E83FCF561D8A") @default(autoincrement())
+  nombre                        String?                         @db.NVarChar(100)
+  etiqueta                      String?                         @db.NVarChar(100)
+  activo                        Int?                            @default(1, map: "DF__layer__activo__6D0D32F4")
+  campana_servicio_layer_estilo campana_servicio_layer_estilo[]
+  layer_filtro                  layer_filtro[]
+  usuario_layer_mapa            usuario_layer_mapa[]
+}
+
+model layer_filtro {
+  id_layer_filtro Int       @id(map: "PK__layer_fi__C42E8A72BEF6F74E") @default(autoincrement())
+  id_layer        Int?
+  id_filtro       Int?
+  id_campana      Int?
+  nombre_tabla    String?   @db.NVarChar(100)
+  campos          String?   @db.NVarChar(255)
+  descripcion     String?   @db.NVarChar(255)
+  campanas        campanas? @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_layer_filtro_campana")
+  filtro          filtro?   @relation(fields: [id_filtro], references: [id_filtro], onDelete: NoAction, onUpdate: NoAction, map: "FK_layer_filtro_filtro")
+  layer           layer?    @relation(fields: [id_layer], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_layer_filtro_layer")
+}
+
+model menu {
+  id_menu        Int            @id(map: "PK__menu__68A1D9DB317A8286") @default(autoincrement())
+  id_menu_parent Int?           @default(0, map: "DF_id_menu_parent")
+  name_menu      String?        @db.NVarChar(255)
+  icon           String?        @db.NVarChar(100)
+  route          String?        @db.NVarChar(100)
+  activo         Int?           @default(1, map: "DF__menu__activo__2FBA0BF1")
+  menu_rol       menu_rol[]
+  menu_usuario   menu_usuario[]
+  submenu        submenu[]
+}
+
+model menu_rol {
+  id      Int      @id(map: "PK__menu_rol__3213E83F8C09F787") @default(autoincrement())
+  id_rol  Int?
+  id_menu Int?
+  activo  Int?     @default(1, map: "DF__menu_rol__activo__3A379A64")
+  menu    menu?    @relation(fields: [id_menu], references: [id_menu], onDelete: NoAction, onUpdate: NoAction, map: "FK_menu_rol_menu")
+  cat_rol cat_rol? @relation(fields: [id_rol], references: [id_rol], onDelete: NoAction, onUpdate: NoAction, map: "FK_menu_rol_rol")
+}
+
+model menu_usuario {
+  id         Int      @id(map: "PK__menu_usu__3213E83F19AE0C35") @default(autoincrement())
+  id_usuario Int?
+  id_menu    Int?
+  menu       menu?    @relation(fields: [id_menu], references: [id_menu], onDelete: NoAction, onUpdate: NoAction, map: "fk_menu_usuario")
+  usuario    usuario? @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_menu")
+}
+
+model meta {
+  id_meta     Int       @id(map: "PK__meta__68A1E9B81AF5DC38") @default(autoincrement())
+  numero_meta Int?
+  create_at   DateTime? @default(now(), map: "DF__meta__create_at__4301EA8F") @db.DateTime
+  estatus     Int?      @default(1, map: "DF__meta__estatus__43F60EC8")
+  id_campana  Int?
+  campanas    campanas? @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_meta_campana")
+}
+
+model modulos {
+  id_modulo                Int                        @id(map: "PK__modulos__B2584DFCD6E689D6") @default(autoincrement())
+  nombre_modulo            String?                    @db.NVarChar(255)
+  activo                   Int?                       @default(1, map: "DF__modulos__activo__44952D46")
+  icono_web                String?                    @db.NVarChar(100)
+  icono_app_movil          String?                    @db.NVarChar(100)
+  url_app_movil            String?                    @db.NVarChar(100)
+  default_active           Int?                       @default(0, map: "DF__modulos__default__4589517F")
+  orden                    Int?
+  in_app_movil             Int?
+  asignacion_campana       asignacion_campana[]
+  procesos_modulos         procesos_modulos[]
+  usuario_campana_procesos usuario_campana_procesos[]
+}
+
+model oficina_enlace {
+  id_oficina_enlace    Int               @id(map: "PK__apoyo__D470E9808F1DCDA9") @default(autoincrement())
+  nombres              String?           @db.NVarChar(100)
+  apellido_paterno     String?           @db.NVarChar(100)
+  apellido_materno     String?           @db.NVarChar(100)
+  calle                String?           @db.NVarChar(100)
+  num_ext              String?           @db.NVarChar(100)
+  num_int              String?           @db.NVarChar(100)
+  colonia              String?           @db.NVarChar(100)
+  codigo_postal        String?           @db.NVarChar(100)
+  telefono_personal    String?           @db.NVarChar(20)
+  correo               String?           @db.NVarChar(100)
+  edad                 Int?
+  id_asunto            Int?
+  id_atendera          Int?
+  cita                 DateTime?         @db.Date
+  hora_cita            Int?
+  minuto_cita          Int?
+  url_foto_persona     String?           @db.NVarChar(255)
+  url_foto_ine_frente  String?           @db.NVarChar(255)
+  url_foto_ine_trasera String?           @db.NVarChar(255)
+  comentarios          String?           @db.NVarChar(255)
+  id_campana           Int?
+  estatus_cita         Int?
+  cita_finalizada      cita_finalizada[]
+  campanas             campanas?         @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_enlace_campana")
+}
+
+model procesos {
+  id                          Int                           @id(map: "PK_procesos") @default(autoincrement())
+  nombre                      String?                       @db.NVarChar(50)
+  icono                       String?                       @db.NVarChar(100)
+  activo                      Int?                          @default(1, map: "DF_procesos_activo")
+  icono_app_movil             String?                       @db.NVarChar(100)
+  asignacion_campana          asignacion_campana[]
+  campana_proceso             campana_proceso[]
+  foto_registro_contribuyente foto_registro_contribuyente[]
+  procesos_modulos            procesos_modulos[]
+  registro_contribuyente      registro_contribuyente[]
+  usuario_campana_procesos    usuario_campana_procesos[]
+}
+
+model procesos_modulos {
+  id         Int       @id(map: "PK__procesos__3213E83FA6820FBE") @default(autoincrement())
+  id_proceso Int?
+  id_modulo  Int?
+  modulos    modulos?  @relation(fields: [id_modulo], references: [id_modulo], onDelete: NoAction, onUpdate: NoAction, map: "FK_procesos_modulos_modulos")
+  procesos   procesos? @relation(fields: [id_proceso], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_procesos_modulos_proceso")
+}
+
+model recorrido_gestor {
+  id_recorrido_gestor Int       @id(map: "PK__recorrid__5E4DB639F03A7BA9") @default(autoincrement())
+  id_usuario          Int?
+  latitud             Decimal?  @db.Decimal(19, 6)
+  longitud            Decimal?  @db.Decimal(19, 16)
+  fecha               DateTime? @db.DateTime
+  usuario             usuario?  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_recorrido_gestor_usuario")
+}
+
+model register_whatsapp_send {
+  id                     String                  @id(map: "PK_id_register_whatsapp") @db.NVarChar(255)
+  number                 String?                 @db.VarChar(100)
+  message_status         String?                 @db.NVarChar(100)
+  id_campana             Int?
+  id_template            Int?
+  fecha                  DateTime?               @db.DateTime
+  campanas               campanas?               @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_whatsapp_campana")
+  cat_templates_whatsapp cat_templates_whatsapp? @relation(fields: [id_template], references: [id_template], onDelete: NoAction, onUpdate: NoAction, map: "FK_whatsapp_template")
+}
+
+model registro_asistencia {
+  id_registro_asistencia                                                                                  Int                           @id(map: "PK__registro__1A52A5BE33DC7801") @default(autoincrement())
+  id_usuario                                                                                              Int?
+  id_campana                                                                                              Int?
+  hora_entrada                                                                                            DateTime?                     @db.DateTime
+  latitud_entrada                                                                                         Decimal?                      @default(0, map: "DF__registro___latit__4FD1D5C8") @db.Decimal(18, 6)
+  longitud_entrada                                                                                        Decimal?                      @default(0, map: "DF__registro___longi__50C5FA01") @db.Decimal(18, 6)
+  punto_entrada                                                                                           Unsupported("geometry")?
+  id_estatus_entrada                                                                                      Int?
+  id_estatus_punto_entrada                                                                                Int?
+  hora_salida                                                                                             DateTime?                     @db.DateTime
+  latitud_salida                                                                                          Decimal?                      @default(0, map: "DF__registro___latit__51BA1E3A") @db.Decimal(18, 6)
+  longitud_salida                                                                                         Decimal?                      @default(0, map: "DF__registro___longi__52AE4273") @db.Decimal(18, 6)
+  punto_salida                                                                                            Unsupported("geometry")?
+  id_estatus_salida                                                                                       Int?
+  id_estatus_punto_salida                                                                                 Int?
+  fecha_captura                                                                                           DateTime?                     @db.DateTime
+  url_foto                                                                                                String?                       @db.NVarChar(Max)
+  url_foto_salida                                                                                         String?                       @db.NVarChar(Max)
+  campanas                                                                                                campanas?                     @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_asistencia_campana")
+  cat_estatus_asistencia_registro_asistencia_id_estatus_salidaTocat_estatus_asistencia                    cat_estatus_asistencia?       @relation("registro_asistencia_id_estatus_salidaTocat_estatus_asistencia", fields: [id_estatus_salida], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_asistencia_estatus_asis_salida")
+  cat_estatus_asistencia_registro_asistencia_id_estatus_entradaTocat_estatus_asistencia                   cat_estatus_asistencia?       @relation("registro_asistencia_id_estatus_entradaTocat_estatus_asistencia", fields: [id_estatus_entrada], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_asistencia_estatus_asistencia")
+  cat_estatus_punto_asistencia_registro_asistencia_id_estatus_punto_entradaTocat_estatus_punto_asistencia cat_estatus_punto_asistencia? @relation("registro_asistencia_id_estatus_punto_entradaTocat_estatus_punto_asistencia", fields: [id_estatus_punto_entrada], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_asistencia_estatus_punto_entrada")
+  cat_estatus_punto_asistencia_registro_asistencia_id_estatus_punto_salidaTocat_estatus_punto_asistencia  cat_estatus_punto_asistencia? @relation("registro_asistencia_id_estatus_punto_salidaTocat_estatus_punto_asistencia", fields: [id_estatus_punto_salida], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_asistencia_estatus_punto_salida")
+  usuario                                                                                                 usuario?                      @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_asistencia_usuario")
+}
+
+model registro_contribuyente {
+  id_registro      Int            @id(map: "PK_id_registro") @default(autoincrement())
+  id_contribuyente String?        @db.NVarChar(100)
+  observaciones    String?        @db.NVarChar(255)
+  numero_ninos     Int?
+  id_proceso       Int?
+  fecha_registro   DateTime?      @db.DateTime
+  id_usuario       Int?
+  id_campana       Int?
+  id_zona          Int?
+  campanas         campanas?      @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_contr_campana")
+  contribuyente    contribuyente? @relation(fields: [id_contribuyente], references: [id_contribuyente], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_contr_contr")
+  procesos         procesos?      @relation(fields: [id_proceso], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_contr_proceso")
+  usuario          usuario?       @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_contr_usuario")
+  zona             zona?          @relation(fields: [id_zona], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_contr_zona")
+}
+
+model registro_push_notifications {
+  id_registro_push                                          Int       @id(map: "PK_id_push") @default(autoincrement())
+  id_push_notification                                      String?   @db.NVarChar(100)
+  id_usuario                                                Int?
+  id_user_push                                              String?   @db.NVarChar(255)
+  titulo_push                                               String?   @db.NVarChar(255)
+  mensaje                                                   String?   @db.NVarChar(Max)
+  leido                                                     Int?      @default(0, map: "DF__registro___leido__58671BC9")
+  url_img                                                   String?   @db.NVarChar(255)
+  categoria                                                 String?   @db.NVarChar(100)
+  tipo                                                      String?   @db.NVarChar(100)
+  fecha                                                     DateTime? @db.DateTime
+  activo                                                    Int?
+  usuario_creo                                              Int?
+  usuario_registro_push_notifications_id_usuarioTousuario   usuario?  @relation("registro_push_notifications_id_usuarioTousuario", fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_push_usuario")
+  usuario_registro_push_notifications_usuario_creoTousuario usuario?  @relation("registro_push_notifications_usuario_creoTousuario", fields: [usuario_creo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_push_usuario_creo")
+}
+
+model registro_seguimiento_gestion {
+  id                       Int                        @default(autoincrement())
+  nombres                  String?                    @db.NVarChar(100)
+  apellido_paterno         String?                    @db.NVarChar(100)
+  apellido_materno         String?                    @db.NVarChar(100)
+  numero_celular           String?                    @db.NVarChar(100)
+  correo                   String?                    @db.NVarChar(100)
+  observaciones            String?                    @db.NVarChar(255)
+  id_campana               Int?
+  id_usuario               Int?
+  latitud                  Decimal?                   @db.Decimal(19, 6)
+  longitud                 Decimal?                   @db.Decimal(19, 6)
+  tipo                     String?                    @db.NVarChar(100)
+  fecha_sincronizacion     DateTime?                  @db.DateTime
+  fecha                    DateTime?                  @db.DateTime
+  id_seguimiento           String                     @id(map: "PK__registro__127E9A1A370FF8CD") @db.NVarChar(100)
+  foto_seguimiento_gestion foto_seguimiento_gestion[]
+  campanas                 campanas?                  @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_seg_campana")
+  usuario                  usuario?                   @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_seg_usuario")
+}
+
+model servicios_mapa {
+  id_servicio_mapa              Int                             @id(map: "PK_id_servicio_mapa") @default(autoincrement())
+  nombre                        String?                         @db.NVarChar(100)
+  icono                         String?                         @db.NVarChar(100)
+  default_active                Int?                            @default(0, map: "DF__servicios__defau__7226EDCC")
+  orden                         Int?
+  activo                        Int?                            @default(1, map: "DF__servicios__activ__731B1205")
+  campana_servicio_layer_estilo campana_servicio_layer_estilo[]
+  usuario_layer_mapa            usuario_layer_mapa[]
+  usuario_servicio_mapa         usuario_servicio_mapa[]
+}
+
+model submenu {
+  id_submenu      Int               @id(map: "PK__submenu__A41C30182BD72A5E") @default(autoincrement())
+  id_menu_parent  Int?
+  name_submenu    String?           @db.NVarChar(255)
+  icon            String?           @db.NVarChar(100)
+  route           String?           @db.NVarChar(100)
+  activo          Int?              @default(1, map: "DF__submenu__activo__3296789C")
+  menu            menu?             @relation(fields: [id_menu_parent], references: [id_menu], onDelete: NoAction, onUpdate: NoAction, map: "fk_menu")
+  submenu_rol     submenu_rol[]
+  submenu_usuario submenu_usuario[]
+}
+
+model submenu_rol {
+  id         Int      @id(map: "PK__submenu___3213E83F7375E5C6") @default(autoincrement())
+  id_rol     Int?
+  id_submenu Int?
+  activo     Int?     @default(1, map: "DF__submenu_r__activ__3D14070F")
+  cat_rol    cat_rol? @relation(fields: [id_rol], references: [id_rol], onDelete: NoAction, onUpdate: NoAction, map: "FK_submenu_rol_rol")
+  submenu    submenu? @relation(fields: [id_submenu], references: [id_submenu], onDelete: NoAction, onUpdate: NoAction, map: "FK_submenu_rol_submenu")
+}
+
+model submenu_usuario {
+  id         Int      @id(map: "PK__submenu___3213E83F76732385") @default(autoincrement())
+  id_usuario Int?
+  id_submenu Int?
+  submenu    submenu? @relation(fields: [id_submenu], references: [id_submenu], onDelete: NoAction, onUpdate: NoAction, map: "fk_submenu_usuario")
+  usuario    usuario? @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_submenu")
+}
+
+model user_session_web {
+  id_session    Int       @id(map: "PK__user_ses__A9E494D0D4C19674") @default(autoincrement())
+  id_usuario    Int?
+  fecha_session DateTime? @db.DateTime
+  usuario       usuario?  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_session_web_usuario")
+}
+
+model usuario {
+  id                                                                            Int                            @id(map: "PK__usuario__3213E83FA713B1A3") @default(autoincrement())
+  usuario                                                                       String?                        @db.NVarChar(80)
+  password                                                                      String?                        @db.NVarChar(20)
+  correo                                                                        String?                        @db.NVarChar(40)
+  nombre                                                                        String?                        @db.NVarChar(90)
+  url_foto                                                                      String?                        @db.NVarChar(255)
+  apellido_paterno                                                              String?                        @db.NVarChar(100)
+  apellido_materno                                                              String?                        @db.NVarChar(100)
+  sexo                                                                          String?                        @db.NVarChar(20)
+  activo                                                                        Int?
+  telefono_personal                                                             String?                        @db.NVarChar(20)
+  id_user_push                                                                  String?                        @db.NVarChar(100)
+  access_app_web                                                                Int?
+  access_app_movil                                                              Int?
+  asignacion_campana                                                            asignacion_campana[]
+  atendera_apoyo                                                                atendera_apoyo[]
+  encargados_zona                                                               encargados_zona[]
+  foto_registro_contribuyente                                                   foto_registro_contribuyente[]
+  foto_seguimiento_gestion                                                      foto_seguimiento_gestion[]
+  menu_usuario                                                                  menu_usuario[]
+  recorrido_gestor                                                              recorrido_gestor[]
+  registro_asistencia                                                           registro_asistencia[]
+  registro_contribuyente                                                        registro_contribuyente[]
+  registro_push_notifications_registro_push_notifications_id_usuarioTousuario   registro_push_notifications[]  @relation("registro_push_notifications_id_usuarioTousuario")
+  registro_push_notifications_registro_push_notifications_usuario_creoTousuario registro_push_notifications[]  @relation("registro_push_notifications_usuario_creoTousuario")
+  registro_seguimiento_gestion                                                  registro_seguimiento_gestion[]
+  submenu_usuario                                                               submenu_usuario[]
+  user_session_web                                                              user_session_web[]
+  usuario_campana_procesos                                                      usuario_campana_procesos[]
+  usuario_layer_mapa                                                            usuario_layer_mapa[]
+  usuario_rol                                                                   usuario_rol[]
+  usuario_servicio_mapa                                                         usuario_servicio_mapa[]
+}
+
+model usuario_campana_procesos {
+  id_usuario_campana_procesos Int       @id(map: "PK_ucp") @default(autoincrement())
+  id_usuario                  Int?
+  id_campana                  Int?
+  id_proceso                  Int?
+  id_modulo                   Int?
+  campanas                    campanas? @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ucp_campana")
+  modulos                     modulos?  @relation(fields: [id_modulo], references: [id_modulo], onDelete: NoAction, onUpdate: NoAction, map: "FK_ucp_modulo")
+  procesos                    procesos? @relation(fields: [id_proceso], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ucp_proceso")
+  usuario                     usuario?  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ucp_usuario")
+}
+
+model usuario_layer_mapa {
+  id               Int             @id(map: "PK__usuario___3213E83F75352AAA") @default(autoincrement())
+  id_usuario       Int?
+  id_layer         Int?
+  id_estilo        Int?
+  id_servicio_mapa Int?
+  url_geoserver    String?         @db.NVarChar(255)
+  estilo_layer     estilo_layer?   @relation(fields: [id_estilo], references: [id_estilo], onDelete: NoAction, onUpdate: NoAction, map: "FK_ulm_estilo")
+  layer            layer?          @relation(fields: [id_layer], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ulm_layer")
+  servicios_mapa   servicios_mapa? @relation(fields: [id_servicio_mapa], references: [id_servicio_mapa], onDelete: NoAction, onUpdate: NoAction, map: "FK_ulm_servicio")
+  usuario          usuario?        @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ulm_usuario")
+}
 
 model usuario_rol {
-  id         Int      @id(map: "PK__usuario___3213E83F82D52C49") @default(autoincrement())
-  id_usuario Int?
-  id_rol     Int?
-  rol        rol?     @relation(fields: [id_rol], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "fk_id_rol124")
-  usuario    usuario? @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "fk_id_usuario124")
+  id_usuario_rol Int      @id(map: "PK_id_usuario_rol") @default(autoincrement())
+  id_usuario     Int?
+  id_rol         Int?
+  cat_rol        cat_rol? @relation(fields: [id_rol], references: [id_rol], onDelete: NoAction, onUpdate: NoAction, map: "FK_ur_rol")
+  usuario        usuario? @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ur_usuario")
+}
+
+model usuario_servicio_mapa {
+  id             Int             @id(map: "PK__usuario___3213E83FFBBCC426") @default(autoincrement())
+  id_usuario     Int?
+  id_servicio    Int?
+  servicios_mapa servicios_mapa? @relation(fields: [id_servicio], references: [id_servicio_mapa], onDelete: NoAction, onUpdate: NoAction, map: "FK_usm_servicio")
+  usuario        usuario?        @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_usm_usuario")
+}
+
+model whatsapp_messages {
+  id                     Int                     @id(map: "PK__whatsapp__3213E83F05838BE1") @default(autoincrement())
+  id_conversation        String?                 @db.NVarChar(255)
+  message                String?                 @db.NVarChar(Max)
+  profile                String?                 @db.NVarChar(255)
+  numberUser             String?                 @db.NVarChar(20)
+  fecha                  DateTime?               @db.DateTime
+  activo                 Int?
+  id_campana             Int?
+  id_template            Int?
+  campanas               campanas?               @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_whats_mess_campana")
+  cat_templates_whatsapp cat_templates_whatsapp? @relation(fields: [id_template], references: [id_template], onDelete: NoAction, onUpdate: NoAction, map: "FK_whats_mess_template")
+}
+
+model zona {
+  id                     Int                      @id(map: "PK__zona__3213E83FDCB6B958") @default(autoincrement())
+  nombre_zona            String?                  @db.NVarChar(100)
+  create_at              DateTime?                @default(now(), map: "DF__zona__create_at__1E8F7FEF") @db.DateTime
+  campanas_zonas         campanas_zonas[]
+  encargados_zona        encargados_zona[]
+  registro_contribuyente registro_contribuyente[]
 }

@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { CustomError, LoginUserDto } from "../../domain";
+import { LoginUserDto } from "../../domain";
 import { UserRepository } from "../../domain/repositories/user.repository";
 import { LoginUser, RegisterUser } from '../../domain/uses-cases/auth'
 import { RegisterUserDto } from "../../domain/dtos/auth/register-user.dto";
+
 
 
 
@@ -22,11 +23,16 @@ export class AuthController {
 
         // * llamar al service -> mas sencillo
 
-        // * llamar al caso de uso -> mas tedioso
+        // * llamar al caso de uso -> clean architecture
         new LoginUser(this.userRepository).execute(loginUserDto!)
             .then(user => {
-                //console.log(user)
-                res.json(user)
+                let {token, ...user_info} = user
+                res.cookie('token', token, {
+                    httpOnly: true, // For security reasons, set HttpOnly to true
+                    secure: process.env.NODE_ENV === 'production', // Set secure to true in production
+                    sameSite: 'lax', // Helps with CSRF protection
+                  });
+                res.json(user_info)
             }).catch(error => res.status(400).json({ error }))
 
     }

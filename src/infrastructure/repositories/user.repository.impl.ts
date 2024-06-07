@@ -15,6 +15,7 @@ export class UserRepositoryImpl implements UserRepository {
     }
   
     registerUser(registerUser: RegisterUserDto): Promise<UserEntity> {
+        //console.log(registerUser)
         return this.datasource.registerUser(registerUser)
     }
 

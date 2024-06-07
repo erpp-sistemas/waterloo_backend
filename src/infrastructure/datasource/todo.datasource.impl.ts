@@ -5,48 +5,57 @@ import { CreateTodoDto, TodoDatasource, TodoEntity, UpdateTodoDto } from "../../
 export class TodoDatasourceImpl implements TodoDatasource {
     
     async create(createTodoDto: CreateTodoDto): Promise<TodoEntity> {
-        const todo = await prisma.todo.create({
-            data: createTodoDto
-        });
+        // const todo = await prisma.todo.create({
+        //     data: createTodoDto
+        // });
 
-        return TodoEntity.fromObject( todo )
+        // return TodoEntity.fromObject( todo )
+
+        return TodoEntity.fromObject( [] )
     }
     
     async getAll(): Promise<TodoEntity[]> {
-        const todos = await prisma.todo.findMany()
-        return todos.map( todo => TodoEntity.fromObject(todo) )
+        // const todos = await prisma.todo.findMany()
+        // return todos.map( todo => TodoEntity.fromObject(todo) )
+        return []
     }
     
     async findById(id: number): Promise<TodoEntity> {
-        const todo = await prisma.todo.findFirst({
-            where: { id }
-        });
+        // const todo = await prisma.todo.findFirst({
+        //     where: { id }
+        // });
 
-        if(!todo) throw `Todo with id ${ id } not found`;
-        return TodoEntity.fromObject(todo)
+        // if(!todo) throw `Todo with id ${ id } not found`;
+        // return TodoEntity.fromObject(todo)
+
+        return TodoEntity.fromObject( [] )
     }
 
     async updateById(updateTodoDto: UpdateTodoDto): Promise<TodoEntity> {
         
-        await this.findById(updateTodoDto.id)
+        // await this.findById(updateTodoDto.id)
 
-        const updateTodo = await prisma.todo.update({
-            where: { id: updateTodoDto.id },
-            data: updateTodoDto!.values
-        });
+        // const updateTodo = await prisma.todo.update({
+        //     where: { id: updateTodoDto.id },
+        //     data: updateTodoDto!.values
+        // });
 
-        return TodoEntity.fromObject(updateTodo)
+        // return TodoEntity.fromObject(updateTodo)
+
+        return TodoEntity.fromObject( [] )
 
     }
 
     async deleteById(id: number): Promise<TodoEntity> {
         
-        await this.findById( id )
-        const deleted = await prisma.todo.delete({
-            where: { id }
-        });
+        // await this.findById( id )
+        // const deleted = await prisma.todo.delete({
+        //     where: { id }
+        // });
 
-        return TodoEntity.fromObject( deleted )
+        // return TodoEntity.fromObject( deleted )
+
+        return TodoEntity.fromObject( [] )
 
     }
     
