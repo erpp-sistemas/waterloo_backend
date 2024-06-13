@@ -8,9 +8,10 @@ export class AuthMiddleware {
     static async validateToken( req: Request, res: Response, next: NextFunction) {
 
         let { token } = req.cookies
-        console.log(token)
+        if(!token) return res.status(401).json('User without authorization');
 
         try {
+
             const payload = await JwtAdapter.validateToken<{id: number}>(token)
             if(!payload) return res.status(401).json({ error: 'Invalid token' });
 
