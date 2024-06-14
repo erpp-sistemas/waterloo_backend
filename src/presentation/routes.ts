@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { AuthRoutes } from './auth/routes'
 import { MenuRoutes } from './menu/routes'
+import { DashboardResume } from './dashboard-resume/routes'
 
 export class AppRoutes {
 
@@ -10,6 +11,7 @@ export class AppRoutes {
         
         router.use('/api/auth', AuthRoutes.routes)
         router.use('/api/menu', MenuRoutes.routes)
+        router.use('/api/dashboard', DashboardResume.routes)
 
         return router;
 
