@@ -3,12 +3,11 @@ import { DashboardResumeRepository } from "../../domain/repositories/dashboard-r
 import { GetData } from '../../domain/uses-cases/dashboard-resume/get-data'
 
 
-
 export class DashboardResumeController {
 
     constructor(
         private dashboardRepository: DashboardResumeRepository
-    ){}
+    ) { }
 
     getData = (req: Request, res: Response) => {
 
@@ -16,8 +15,8 @@ export class DashboardResumeController {
 
         new GetData(this.dashboardRepository).execute(Number(id_campana))
             .then(data => res.json(data))
-            .catch(error => res.status(400).json({error}))
-
+            .catch(error => res.status(400).json({ error }))
     }
 
+    
 }
