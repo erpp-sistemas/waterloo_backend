@@ -396,31 +396,31 @@ model modulos {
 }
 
 model oficina_enlace {
-  id_oficina_enlace    Int               @id(map: "PK__apoyo__D470E9808F1DCDA9") @default(autoincrement())
-  nombres              String?           @db.NVarChar(100)
-  apellido_paterno     String?           @db.NVarChar(100)
-  apellido_materno     String?           @db.NVarChar(100)
-  calle                String?           @db.NVarChar(100)
-  num_ext              String?           @db.NVarChar(100)
-  num_int              String?           @db.NVarChar(100)
-  colonia              String?           @db.NVarChar(100)
-  codigo_postal        String?           @db.NVarChar(100)
-  telefono_personal    String?           @db.NVarChar(20)
-  correo               String?           @db.NVarChar(100)
-  edad                 Int?
-  id_asunto            Int?
-  id_atendera          Int?
-  cita                 DateTime?         @db.Date
-  hora_cita            Int?
-  minuto_cita          Int?
-  url_foto_persona     String?           @db.NVarChar(255)
-  url_foto_ine_frente  String?           @db.NVarChar(255)
-  url_foto_ine_trasera String?           @db.NVarChar(255)
-  comentarios          String?           @db.NVarChar(255)
-  id_campana           Int?
-  estatus_cita         Int?
-  cita_finalizada      cita_finalizada[]
-  campanas             campanas?         @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_enlace_campana")
+  id_oficina_enlace     Int               @id(map: "PK__apoyo__D470E9808F1DCDA9") @default(autoincrement())
+  nombres               String?           @db.NVarChar(100)
+  apellido_paterno      String?           @db.NVarChar(100)
+  apellido_materno      String?           @db.NVarChar(100)
+  calle                 String?           @db.NVarChar(100)
+  num_ext               String?           @db.NVarChar(100)
+  num_int               String?           @db.NVarChar(100)
+  colonia               String?           @db.NVarChar(100)
+  codigo_postal         String?           @db.NVarChar(100)
+  telefono_personal     String?           @db.NVarChar(20)
+  correo                String?           @db.NVarChar(100)
+  edad                  Int?
+  id_asunto             Int?
+  id_atendera           Int?
+  fecha_cita            DateTime?         @db.Date
+  hora_cita             String?           @db.NVarChar(10)
+  url_photo_face        String?           @db.NVarChar(255)
+  url_photo_ine_frente  String?           @db.NVarChar(255)
+  url_photo_ine_trasera String?           @db.NVarChar(255)
+  comentarios           String?           @db.NVarChar(255)
+  id_campana            Int?
+  estatus_cita          Int?
+  fecha                 DateTime?         @default(now(), map: "DF__oficina_e__fecha__6E765879") @db.DateTime
+  cita_finalizada       cita_finalizada[]
+  campanas              campanas?         @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_enlace_campana")
 }
 
 model procesos {
@@ -599,7 +599,7 @@ model user_session_web {
 model usuario {
   id                                                                            Int                            @id(map: "PK__usuario__3213E83FA713B1A3") @default(autoincrement())
   usuario                                                                       String?                        @db.NVarChar(80)
-  password                                                                      String?                        @db.NVarChar(20)
+  password                                                                      String?                        @db.NVarChar(255)
   correo                                                                        String?                        @db.NVarChar(40)
   nombre                                                                        String?                        @db.NVarChar(90)
   url_foto                                                                      String?                        @db.NVarChar(255)
@@ -693,4 +693,20 @@ model zona {
   campanas_zonas         campanas_zonas[]
   encargados_zona        encargados_zona[]
   registro_contribuyente registro_contribuyente[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ps_plain {
+  id       Int     @default(autoincrement())
+  password String? @db.NVarChar(20)
+
+  @@ignore
+}
+
+model notifications_web {
+  id_notification Int       @id(map: "PK__notifica__925C842F63A46B03") @default(autoincrement())
+  name            String    @default("", map: "DF__notificati__name__7152C524") @db.NVarChar(255)
+  id_usuario      Int
+  status          Int?      @default(0, map: "DF__notificat__statu__7246E95D")
+  fecha           DateTime? @default(now(), map: "DF__notificat__fecha__733B0D96") @db.DateTime
 }

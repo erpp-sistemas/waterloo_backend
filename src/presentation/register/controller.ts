@@ -5,8 +5,6 @@ import { RegisterDto } from "../../domain";
 import { WssService } from "../services/wss.service";
 
 
-
-
 export class RegisterController {
 
     constructor(
