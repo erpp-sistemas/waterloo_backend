@@ -5,6 +5,7 @@ import { DashboardResume } from './dashboard-resume/routes'
 import { RegisterRoutes } from './register/routes';
 import { OficinaEnlaceRoutes } from './oficina-enlace/routes';
 import { NotificationRoutes } from './notification/routes';
+import { AtenderaOficinaEnlaceRoutes } from './atendera-oficina.enlace/routes';
 
 export class AppRoutes {
 
@@ -18,6 +19,7 @@ export class AppRoutes {
         router.use('/api/register', RegisterRoutes.routes)
         router.use('/api/oficina-enlace', OficinaEnlaceRoutes.routes)
         router.use('/api/notification', NotificationRoutes.routes)
+        router.use('/api/atendera-oficina', AtenderaOficinaEnlaceRoutes.routes)
 
         return router;
 
