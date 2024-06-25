@@ -4,6 +4,7 @@ import { OficinaEnlaceDto } from "../../domain";
 import { InsertRegister } from '../../domain/uses-cases/oficina-enlace/insert-register'
 import { WssService } from "../services/wss.service";
 
+
 export class OficinaEnlaceController {
 
     constructor(
@@ -18,7 +19,9 @@ export class OficinaEnlaceController {
         new InsertRegister(this.oficinaEnlaceRepository).execute(oficinaEnlaceDto!)
             .then(register => {
                 if (register.id_atendera > 0) {
-                    this.wssService.sendMessage('on-cita-changed', register)
+                    let { id_oficina_enlace, id_asunto, id_atendera } = register;
+                    const obj = { id_oficina_enlace, id_asunto, id_atendera }
+                    this.wssService.sendMessage('on-cita-changed', obj)
                 }
                 res.json({ message: 'Registro insertado correctamente' })
             }).catch(error => res.status(400).json({ error }))
@@ -26,4 +29,4 @@ export class OficinaEnlaceController {
     }
 
 
-}
+} 

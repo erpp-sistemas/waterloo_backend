@@ -1,6 +1,5 @@
 import { OficinaEnlaceDto } from "../../domain";
 import { OficinaEnlaceDatasource } from "../../domain/datasources/oficina.enlace.datasource";
-import { OficinaEnlaceWSEntity } from "../../domain/entities/oficina-enlace-ws.entity";
 import { OficinaEnlaceEntity } from "../../domain/entities/oficina-enlace.entity";
 import { OficinaEnlaceRepository } from "../../domain/repositories/oficina-enlace.repository";
 
@@ -12,7 +11,7 @@ export class OficinaEnlaceRepositoryImpl implements OficinaEnlaceRepository {
         private datasource: OficinaEnlaceDatasource
     ) {}
     
-    insertRegister(oficinaEnlaceDto: OficinaEnlaceDto): Promise<OficinaEnlaceWSEntity> {
+    insertRegister(oficinaEnlaceDto: OficinaEnlaceDto): Promise<OficinaEnlaceEntity> {
         return this.datasource.insertRegister(oficinaEnlaceDto)
     }
 

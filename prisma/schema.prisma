@@ -40,14 +40,6 @@ model asignacion_excel {
   @@ignore
 }
 
-model atendera_apoyo {
-  id_atendera Int       @id(map: "PK__atendera__A973F0FDCF49DB9B") @default(autoincrement())
-  id_usuario  Int?
-  id_campana  Int?
-  campanas    campanas? @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_campana")
-  usuario     usuario?  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_usuario")
-}
-
 model campana_proceso {
   id_campana_proceso Int      @id(map: "PK_id_campana_proceso") @default(autoincrement())
   id_campana         Int
@@ -82,7 +74,7 @@ model campanas {
   radius                        Int?                            @default(0, map: "DF_campanas_radius")
   id_horario                    Int
   asignacion_campana            asignacion_campana[]
-  atendera_apoyo                atendera_apoyo[]
+  atendera_oficina_enlace       atendera_oficina_enlace[]
   campana_proceso               campana_proceso[]
   campana_servicio_layer_estilo campana_servicio_layer_estilo[]
   horario                       horario                         @relation(fields: [id_horario], references: [id_horario], onUpdate: NoAction, map: "FK_campana_horario")
@@ -396,31 +388,32 @@ model modulos {
 }
 
 model oficina_enlace {
-  id_oficina_enlace     Int               @id(map: "PK__apoyo__D470E9808F1DCDA9") @default(autoincrement())
-  nombres               String?           @db.NVarChar(100)
-  apellido_paterno      String?           @db.NVarChar(100)
-  apellido_materno      String?           @db.NVarChar(100)
-  calle                 String?           @db.NVarChar(100)
-  num_ext               String?           @db.NVarChar(100)
-  num_int               String?           @db.NVarChar(100)
-  colonia               String?           @db.NVarChar(100)
-  codigo_postal         String?           @db.NVarChar(100)
-  telefono_personal     String?           @db.NVarChar(20)
-  correo                String?           @db.NVarChar(100)
+  id_oficina_enlace     Int                 @id(map: "PK__apoyo__D470E9808F1DCDA9") @default(autoincrement())
+  nombres               String?             @db.NVarChar(100)
+  apellido_paterno      String?             @db.NVarChar(100)
+  apellido_materno      String?             @db.NVarChar(100)
+  calle                 String?             @db.NVarChar(100)
+  num_ext               String?             @db.NVarChar(100)
+  num_int               String?             @db.NVarChar(100)
+  colonia               String?             @db.NVarChar(100)
+  codigo_postal         String?             @db.NVarChar(100)
+  telefono_personal     String?             @db.NVarChar(20)
+  correo                String?             @db.NVarChar(100)
   edad                  Int?
   id_asunto             Int?
   id_atendera           Int?
-  fecha_cita            DateTime?         @db.Date
-  hora_cita             String?           @db.NVarChar(10)
-  url_photo_face        String?           @db.NVarChar(255)
-  url_photo_ine_frente  String?           @db.NVarChar(255)
-  url_photo_ine_trasera String?           @db.NVarChar(255)
-  comentarios           String?           @db.NVarChar(255)
+  fecha_cita            DateTime?           @db.Date
+  hora_cita             String?             @db.NVarChar(10)
+  url_photo_face        String?             @db.NVarChar(255)
+  url_photo_ine_frente  String?             @db.NVarChar(255)
+  url_photo_ine_trasera String?             @db.NVarChar(255)
+  comentarios           String?             @db.NVarChar(255)
   id_campana            Int?
   estatus_cita          Int?
-  fecha                 DateTime?         @default(now(), map: "DF__oficina_e__fecha__6E765879") @db.DateTime
+  fecha                 DateTime?           @default(now(), map: "DF__oficina_e__fecha__6E765879") @db.DateTime
   cita_finalizada       cita_finalizada[]
-  campanas              campanas?         @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_enlace_campana")
+  notifications_web     notifications_web[]
+  campanas              campanas?           @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_enlace_campana")
 }
 
 model procesos {
@@ -612,7 +605,7 @@ model usuario {
   access_app_web                                                                Int?
   access_app_movil                                                              Int?
   asignacion_campana                                                            asignacion_campana[]
-  atendera_apoyo                                                                atendera_apoyo[]
+  atendera_oficina_enlace                                                       atendera_oficina_enlace[]
   encargados_zona                                                               encargados_zona[]
   foto_registro_contribuyente                                                   foto_registro_contribuyente[]
   foto_seguimiento_gestion                                                      foto_seguimiento_gestion[]
@@ -704,9 +697,26 @@ model ps_plain {
 }
 
 model notifications_web {
-  id_notification Int       @id(map: "PK__notifica__925C842F63A46B03") @default(autoincrement())
-  name            String    @default("", map: "DF__notificati__name__7152C524") @db.NVarChar(255)
-  id_usuario      Int
-  status          Int?      @default(0, map: "DF__notificat__statu__7246E95D")
-  fecha           DateTime? @default(now(), map: "DF__notificat__fecha__733B0D96") @db.DateTime
+  id_notification      Int             @id(map: "PK__notifica__925C842F63A46B03") @default(autoincrement())
+  name                 String          @default("", map: "DF__notificati__name__7152C524") @db.NVarChar(255)
+  id_usuario           Int
+  status               Int?            @default(0, map: "DF__notificat__statu__7246E95D")
+  fecha                DateTime?       @default(now(), map: "DF__notificat__fecha__733B0D96") @db.DateTime
+  id_type_notification Int?
+  id_oficina_enlace    Int?
+  oficina_enlace       oficina_enlace? @relation(fields: [id_oficina_enlace], references: [id_oficina_enlace], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_notification")
+}
+
+model atendera_oficina_enlace {
+  id_atendera Int       @id(map: "PK__atendera__A973F0FDCF49DB9B") @default(autoincrement())
+  id_usuario  Int?
+  id_campana  Int?
+  campanas    campanas? @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_campana")
+  usuario     usuario?  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_usuario")
+}
+
+model cat_type_notification {
+  id_type_notification Int       @id(map: "PK__cat_type__963C765C2EA2DFC1") @default(autoincrement())
+  type                 String    @db.NVarChar(100)
+  created_at           DateTime? @default(now(), map: "DF__cat_type___creat__0371755F") @db.DateTime
 }
