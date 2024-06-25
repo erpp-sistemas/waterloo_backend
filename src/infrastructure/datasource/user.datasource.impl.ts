@@ -30,7 +30,7 @@ export class UserDatasourceImpl implements UserDatasource {
 
             return UserEntity.fromObject(userEntity)
         } catch (error) {
-            console.log(error)
+            console.error(error)
             return UserEntity.fromObject([])
         }
 

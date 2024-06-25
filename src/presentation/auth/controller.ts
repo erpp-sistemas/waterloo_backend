@@ -45,7 +45,6 @@ export class AuthController {
         // * llamar al caso de uso register user
         new RegisterUser(this.userRepository).execute(registerUserDto!)
             .then(user => {
-                //console.log(user)
                 res.json(user)
             })
             .catch(error => res.status(400).json({ error }))

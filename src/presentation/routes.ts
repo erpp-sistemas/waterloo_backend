@@ -4,6 +4,7 @@ import { MenuRoutes } from './menu/routes'
 import { DashboardResume } from './dashboard-resume/routes'
 import { RegisterRoutes } from './register/routes';
 import { OficinaEnlaceRoutes } from './oficina-enlace/routes';
+import { NotificationRoutes } from './notification/routes';
 
 export class AppRoutes {
 
@@ -16,6 +17,7 @@ export class AppRoutes {
         router.use('/api/dashboard', DashboardResume.routes)
         router.use('/api/register', RegisterRoutes.routes)
         router.use('/api/oficina-enlace', OficinaEnlaceRoutes.routes)
+        router.use('/api/notification', NotificationRoutes.routes)
 
         return router;
 
