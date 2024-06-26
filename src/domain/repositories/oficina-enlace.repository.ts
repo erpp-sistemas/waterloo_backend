@@ -5,8 +5,12 @@ import { OficinaEnlaceEntity } from "../entities/oficina-enlace.entity";
 
 export abstract class OficinaEnlaceRepository {
 
-    abstract insertRegister(oficinaEnlaceDto: OficinaEnlaceDto): Promise<OficinaEnlaceEntity>  
+    abstract insertRegister(oficinaEnlaceDto: OficinaEnlaceDto): Promise<OficinaEnlaceEntity>;
 
-    abstract getByIdCampana(id_campana: number): Promise<OficinaEnlaceEntity[]>
+    abstract getByIdCampana(id_campana: number): Promise<OficinaEnlaceEntity[]>;
+
+    abstract getCitasByCampanaByUser(id_campana: number, id_usuario: number): Promise<OficinaEnlaceEntity[]>;
+
+    abstract updateCita(id_oficina_enlace: number, data: {[key: string]: any}): Promise<OficinaEnlaceEntity>
 
 }

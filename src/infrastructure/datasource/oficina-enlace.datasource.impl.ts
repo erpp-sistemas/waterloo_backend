@@ -27,4 +27,35 @@ export class OficinaEnlaceDatasourceImpl implements OficinaEnlaceDatasource {
     }
 
 
+    async getCitasByCampanaByUser(id_campana: number, id_usuario: number): Promise<OficinaEnlaceEntity[]> {
+        try {
+            const citas = await prisma.oficina_enlace.findMany({
+                where: {
+                    id_asunto: 1,
+                    id_campana: id_campana,
+                    id_atendera: id_usuario
+                }
+            })
+            return citas.map(cita => OficinaEnlaceEntity.fromObject(cita))
+        } catch (error) {
+            console.error(error);
+            throw CustomError.internalServer('Internal server error');
+        }
+    }
+
+    async updateCita(id_oficina_enlace: number, data: {[key: string]: any}): Promise<OficinaEnlaceEntity> {
+        try {
+
+            const cita_update = await prisma.oficina_enlace.update({
+                where: { id_oficina_enlace: id_oficina_enlace },
+                data: data
+            })
+            return OficinaEnlaceEntity.fromObject(cita_update);
+        } catch (error) {
+            console.error(error);
+            throw CustomError.internalServer('Internal server error');
+        }
+    }
+
+
 }

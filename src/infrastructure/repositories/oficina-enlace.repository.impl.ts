@@ -6,11 +6,11 @@ import { OficinaEnlaceRepository } from "../../domain/repositories/oficina-enlac
 
 export class OficinaEnlaceRepositoryImpl implements OficinaEnlaceRepository {
 
-
     constructor(
         private datasource: OficinaEnlaceDatasource
-    ) {}
-    
+    ) { }
+
+
     insertRegister(oficinaEnlaceDto: OficinaEnlaceDto): Promise<OficinaEnlaceEntity> {
         return this.datasource.insertRegister(oficinaEnlaceDto)
     }
@@ -19,6 +19,14 @@ export class OficinaEnlaceRepositoryImpl implements OficinaEnlaceRepository {
         throw new Error("Method not implemented.");
     }
 
+
+    getCitasByCampanaByUser(id_campana: number, id_usuario: number): Promise<OficinaEnlaceEntity[]> {
+        return this.datasource.getCitasByCampanaByUser(id_campana, id_usuario)
+    }
+
+    updateCita(id_oficina_enlace: number, data: {[key: string]: any}): Promise<OficinaEnlaceEntity> {
+        return this.datasource.updateCita(id_oficina_enlace, data)
+    }
 
 
 }

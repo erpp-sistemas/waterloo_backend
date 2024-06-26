@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { OficinaEnlaceRepository } from "../../domain/repositories/oficina-enlace.repository";
 import { OficinaEnlaceDto } from "../../domain";
-import { InsertRegister } from '../../domain/uses-cases/oficina-enlace/insert-register'
+import { InsertRegister, GetByCampanaByUser, UpdateCita } from '../../domain/uses-cases/oficina-enlace'
 import { WssService } from "../services/wss.service";
 
 
@@ -26,6 +26,23 @@ export class OficinaEnlaceController {
                 res.json({ message: 'Registro insertado correctamente' })
             }).catch(error => res.status(400).json({ error }))
 
+    }
+
+
+    //* citas son el id_asunto 1 de los registros de oficina enlace
+    getByCampanaByUser = (req: Request, res: Response) => {
+        let { id_campana, id_usuario } = req.params;
+        new GetByCampanaByUser(this.oficinaEnlaceRepository).execute(Number(id_campana), Number(id_usuario))
+            .then( citas => res.json(citas))
+            .catch(error => res.status(400).json({ error }))
+    }
+
+    updateCita = (req: Request, res: Response) => {
+        let { id_oficina_enlace, data } = req.body;
+
+        new UpdateCita(this.oficinaEnlaceRepository).execute(id_oficina_enlace, data)
+            .then( cita => res.json(cita) )
+            .catch(error => res.status(400).json({ error }))
     }
 
 
