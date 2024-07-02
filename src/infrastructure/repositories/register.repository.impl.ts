@@ -1,4 +1,4 @@
-import { RegisterDto, RegisterEntity } from "../../domain";
+import { RegisterDto, DashboardResumeEntity } from "../../domain";
 import { RegisterDatasource } from "../../domain/datasources/register.datasource";
 import { RegisterRepository } from "../../domain/repositories/register.repository";
 
@@ -11,7 +11,7 @@ export class RegisterRepositoryImpl implements RegisterRepository {
     ){}
 
     
-    insertRegister(registerDto: RegisterDto): Promise<RegisterEntity> {
+    insertRegister(registerDto: RegisterDto): Promise<DashboardResumeEntity> {
         return this.datasource.insertRegister(registerDto)
     }
 

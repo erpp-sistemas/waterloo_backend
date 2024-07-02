@@ -1,12 +1,11 @@
 
 import { RegisterDto } from '../dtos'
-import { RegisterEntity } from '../entities/register.entity';
-
+import { DashboardResumeEntity } from '../entities/dashboard-resume.entity'
 
 
 export abstract class RegisterDatasource {
 
-    abstract insertRegister(registerDto: RegisterDto): Promise<RegisterEntity> 
+    abstract insertRegister(registerDto: RegisterDto): Promise<DashboardResumeEntity> 
     
 
 }

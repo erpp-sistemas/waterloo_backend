@@ -19,7 +19,7 @@ export class RegisterController {
 
         new InsertRegister(this.registerRepository).execute(registerDto!).then(register => {
             this.wssService.sendMessage('on-register-changed',
-                [register.total, register.registros_por_usuario, register.registros_por_proceso]
+                [register.registros_por_usuario, register.total_numeros_whatsapp, register.total_militantes, register.total_registros, register.oficina_enlace, register.registros_por_proceso]
             )
             res.json(register)
         }).catch(error => res.status(400).json({ error }))

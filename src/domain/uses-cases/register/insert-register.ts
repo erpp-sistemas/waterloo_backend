@@ -1,10 +1,10 @@
 import { RegisterDto } from "../../dtos";
-import { RegisterEntity } from "../../entities/register.entity";
+import { DashboardResumeEntity } from "../../entities/dashboard-resume.entity";
 import { RegisterRepository } from "../../repositories/register.repository";
 
 
 interface InsertRegisterUseCase {
-    execute( dto: RegisterDto ): Promise<RegisterEntity>
+    execute( dto: RegisterDto ): Promise<DashboardResumeEntity>
 }
 
 export class InsertRegister implements InsertRegisterUseCase {
@@ -13,7 +13,7 @@ export class InsertRegister implements InsertRegisterUseCase {
         public registerRepository: RegisterRepository
     ) {}
 
-    execute(dto: RegisterDto): Promise<RegisterEntity> {
+    execute(dto: RegisterDto): Promise<DashboardResumeEntity> {
         return this.registerRepository.insertRegister(dto)
     }
 
