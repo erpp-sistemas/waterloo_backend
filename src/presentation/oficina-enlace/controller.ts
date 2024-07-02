@@ -30,9 +30,9 @@ export class OficinaEnlaceController {
 
 
     //* citas son el id_asunto 1 de los registros de oficina enlace
-    getByCampanaByUser = (req: Request, res: Response) => {
-        let { id_campana, id_usuario } = req.params;
-        new GetByCampanaByUser(this.oficinaEnlaceRepository).execute(Number(id_campana), Number(id_usuario))
+    getByUser = (req: Request, res: Response) => {
+        let { id_usuario } = req.params;
+        new GetByCampanaByUser(this.oficinaEnlaceRepository).execute(Number(id_usuario))
             .then( citas => res.json(citas))
             .catch(error => res.status(400).json({ error }))
     }

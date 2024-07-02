@@ -27,12 +27,11 @@ export class OficinaEnlaceDatasourceImpl implements OficinaEnlaceDatasource {
     }
 
 
-    async getCitasByCampanaByUser(id_campana: number, id_usuario: number): Promise<OficinaEnlaceEntity[]> {
+    async getCitasByUser(id_usuario: number): Promise<OficinaEnlaceEntity[]> {
         try {
             const citas = await prisma.oficina_enlace.findMany({
                 where: {
                     id_asunto: 1,
-                    id_campana: id_campana,
                     id_atendera: id_usuario
                 }
             })

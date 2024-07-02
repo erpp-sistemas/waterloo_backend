@@ -2,5 +2,5 @@
 
 
 export * from './insert-register'
-export * from './get-cita-by-campana'
+export * from './get-citas-by-user'
 export * from './update-cita'

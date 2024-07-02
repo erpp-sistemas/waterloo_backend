@@ -9,7 +9,7 @@ export abstract class OficinaEnlaceRepository {
 
     abstract getByIdCampana(id_campana: number): Promise<OficinaEnlaceEntity[]>;
 
-    abstract getCitasByCampanaByUser(id_campana: number, id_usuario: number): Promise<OficinaEnlaceEntity[]>;
+    abstract getCitasByUser(id_usuario: number): Promise<OficinaEnlaceEntity[]>;
 
     abstract updateCita(id_oficina_enlace: number, data: {[key: string]: any}): Promise<OficinaEnlaceEntity>
 

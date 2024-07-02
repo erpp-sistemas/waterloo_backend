@@ -19,9 +19,9 @@ export class OficinaEnlaceEntity {
         public id_atendera: number,
         public fecha_cita: string,
         public hora_cita: string,
-        public url_foto_persona: string,
-        public url_foto_ine_frente: string,
-        public url_foto_ine_trasera: string,
+        public url_photo_face: string,
+        public url_photo_ine_frente: string,
+        public url_photo_ine_trasera: string,
         public comentarios: string,
         public id_campana: number,
         public estatus_cita: number
@@ -32,13 +32,13 @@ export class OficinaEnlaceEntity {
         let {
             id_oficina_enlace, nombres, apellido_paterno, apellido_materno, calle, num_ext, num_int, colonia, codigo_postal,
             telefono_personal, correo, edad, id_asunto, id_atendera, fecha_cita, hora_cita,
-            url_foto_persona, url_foto_ine_frente, url_foto_ine_trasera, comentarios, id_campana,
+            url_photo_face, url_photo_ine_frente, url_photo_ine_trasera, comentarios, id_campana,
             estatus_cita 
         } = object;
 
         return new OficinaEnlaceEntity(id_oficina_enlace, nombres, apellido_paterno, apellido_materno, calle, num_ext, num_int,
             colonia, codigo_postal, telefono_personal, correo, edad, id_asunto, id_atendera, fecha_cita, hora_cita, 
-            url_foto_persona, url_foto_ine_frente, url_foto_ine_trasera, comentarios, id_campana,  estatus_cita)
+            url_photo_face, url_photo_ine_frente, url_photo_ine_trasera, comentarios, id_campana,  estatus_cita)
 
     }
 

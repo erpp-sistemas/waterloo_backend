@@ -20,8 +20,8 @@ export class OficinaEnlaceRepositoryImpl implements OficinaEnlaceRepository {
     }
 
 
-    getCitasByCampanaByUser(id_campana: number, id_usuario: number): Promise<OficinaEnlaceEntity[]> {
-        return this.datasource.getCitasByCampanaByUser(id_campana, id_usuario)
+    getCitasByUser(id_usuario: number): Promise<OficinaEnlaceEntity[]> {
+        return this.datasource.getCitasByUser(id_usuario)
     }
 
     updateCita(id_oficina_enlace: number, data: {[key: string]: any}): Promise<OficinaEnlaceEntity> {

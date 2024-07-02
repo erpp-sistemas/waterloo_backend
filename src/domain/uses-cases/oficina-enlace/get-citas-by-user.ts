@@ -3,7 +3,7 @@ import { OficinaEnlaceRepository } from "../../repositories/oficina-enlace.repos
 
 
 interface GetByCampanaByUserUseCase {
-    execute( id_campana: number, id_usuario: number ): Promise<OficinaEnlaceEntity[]>
+    execute( id_usuario: number ): Promise<OficinaEnlaceEntity[]>
 }
 
 
@@ -13,8 +13,8 @@ export class GetByCampanaByUser implements GetByCampanaByUserUseCase {
         public oficinaEnlaceRepository: OficinaEnlaceRepository
     ){}
 
-    execute(id_campana: number, id_usuario: number): Promise<OficinaEnlaceEntity[]> {
-        return this.oficinaEnlaceRepository.getCitasByCampanaByUser(id_campana, id_usuario)
+    execute(id_usuario: number): Promise<OficinaEnlaceEntity[]> {
+        return this.oficinaEnlaceRepository.getCitasByUser(id_usuario)
     }
 
 }
