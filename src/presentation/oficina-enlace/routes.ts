@@ -19,6 +19,7 @@ export class OficinaEnlaceRoutes {
         router.post('/new-register', oficinaEnlaceController.insertNewRegisterOE)
         router.get('/get-citas-user/:id_usuario', oficinaEnlaceController.getByUser)
         router.put('/update-cita', oficinaEnlaceController.updateCita)
+        router.post('/finish-cita', oficinaEnlaceController.finishCita)
 
         return router;
 

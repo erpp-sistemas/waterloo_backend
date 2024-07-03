@@ -9,8 +9,7 @@ export class OficinaEnlaceRepositoryImpl implements OficinaEnlaceRepository {
     constructor(
         private datasource: OficinaEnlaceDatasource
     ) { }
-
-
+    
     insertRegister(oficinaEnlaceDto: OficinaEnlaceDto): Promise<OficinaEnlaceEntity> {
         return this.datasource.insertRegister(oficinaEnlaceDto)
     }
@@ -21,11 +20,15 @@ export class OficinaEnlaceRepositoryImpl implements OficinaEnlaceRepository {
 
 
     getCitasByUser(id_usuario: number): Promise<OficinaEnlaceEntity[]> {
-        return this.datasource.getCitasByUser(id_usuario)
+        return this.datasource.getCitasByUser(id_usuario);
     }
 
     updateCita(id_oficina_enlace: number, data: {[key: string]: any}): Promise<OficinaEnlaceEntity> {
-        return this.datasource.updateCita(id_oficina_enlace, data)
+        return this.datasource.updateCita(id_oficina_enlace, data);
+    }
+
+    finishCita(id_oficina_enlace: number, observaciones: string): Promise<string> {
+        return this.datasource.finishCita(id_oficina_enlace, observaciones);
     }
 
 

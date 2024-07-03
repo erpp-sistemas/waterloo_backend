@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { OficinaEnlaceRepository } from "../../domain/repositories/oficina-enlace.repository";
 import { OficinaEnlaceDto } from "../../domain";
-import { InsertRegister, GetByCampanaByUser, UpdateCita } from '../../domain/uses-cases/oficina-enlace'
+import { InsertRegister, GetByCampanaByUser, UpdateCita, FinishCita } from '../../domain/uses-cases/oficina-enlace'
 import { WssService } from "../services/wss.service";
 
 
@@ -43,6 +43,13 @@ export class OficinaEnlaceController {
         new UpdateCita(this.oficinaEnlaceRepository).execute(id_oficina_enlace, data)
             .then( cita => res.json(cita) )
             .catch(error => res.status(400).json({ error }))
+    }
+
+    finishCita = (req: Request, res: Response) => {
+        let { id_oficina_enlace, observaciones } = req.body;
+        new FinishCita(this.oficinaEnlaceRepository).execute(id_oficina_enlace, observaciones)
+            .then( message => res.json({ message }))
+            .catch(error => res.status(400).json( { error } ))
     }
 
 

@@ -42,7 +42,7 @@ export class OficinaEnlaceDatasourceImpl implements OficinaEnlaceDatasource {
         }
     }
 
-    async updateCita(id_oficina_enlace: number, data: {[key: string]: any}): Promise<OficinaEnlaceEntity> {
+    async updateCita(id_oficina_enlace: number, data: { [key: string]: any }): Promise<OficinaEnlaceEntity> {
         try {
 
             const cita_update = await prisma.oficina_enlace.update({
@@ -50,6 +50,25 @@ export class OficinaEnlaceDatasourceImpl implements OficinaEnlaceDatasource {
                 data: data
             })
             return OficinaEnlaceEntity.fromObject(cita_update);
+        } catch (error) {
+            console.error(error);
+            throw CustomError.internalServer('Internal server error');
+        }
+    }
+
+    async finishCita(id_oficina_enlace: number, observaciones: string): Promise<string> {
+        try {
+            await prisma.cita_finalizada.create({
+                data: {
+                    id_oficina_enlace: id_oficina_enlace,
+                    observaciones: observaciones
+                }
+            })
+            await prisma.oficina_enlace.update({
+                data: { estatus_cita: 1 },
+                where: { id_oficina_enlace: id_oficina_enlace }
+            })
+            return 'Cita finished';
         } catch (error) {
             console.error(error);
             throw CustomError.internalServer('Internal server error');

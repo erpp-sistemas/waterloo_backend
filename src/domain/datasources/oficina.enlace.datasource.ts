@@ -14,4 +14,6 @@ export abstract class OficinaEnlaceDatasource {
 
     abstract updateCita(id_oficina_enlace: number, data: {[key: string]: any}): Promise<OficinaEnlaceEntity>
 
+    abstract finishCita(id_oficina_enlace: number, observaciones: string) : Promise<string>
+
 }
