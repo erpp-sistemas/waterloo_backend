@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ErppayRepository } from "../../domain/repositories/erppay.repository";
-import { GeneratePdf } from '../../domain/uses-cases/erppay/generate-pdf'
+import { GeneratePdf, GetInfoAccount } from '../../domain/uses-cases/erppay'
 import { GeneratePdfDto } from "../../domain/dtos/erppay/generate-pdf";
 
 
@@ -10,6 +10,16 @@ export class ErppayController {
     constructor(
         private erppayRepository: ErppayRepository
     ) { }
+
+
+
+    getInfoAccount = (req: Request, res: Response) => {
+        let { account } = req.params;
+        new GetInfoAccount(this.erppayRepository).execute(account)
+            .then(data => res.json(data))
+            .catch(error => res.status(400).json( { error } ))
+
+    }
 
     generatePdf = (req: Request, res: Response) => {
 

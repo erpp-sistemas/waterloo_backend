@@ -6,4 +6,6 @@ export abstract class ErppayRepository {
 
     abstract generatePdf(generatePdfDto: GeneratePdfDto): Promise<Buffer>;
 
+    abstract getInfoAccount(account: string): Promise<ErppayEntity>
+
 }

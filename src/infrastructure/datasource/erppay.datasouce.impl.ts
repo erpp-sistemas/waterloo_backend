@@ -1,12 +1,25 @@
 import { ErppayDatasource } from "../../domain/datasources/erppay.datasource";
 import { GeneratePdfDto } from "../../domain/dtos/erppay/generate-pdf";
-import { ErppayEntity } from "../../domain/entities/erppay-entity";
 import { PdfCreate } from '../../config/pdf-create.adapter'
 import { CustomError } from "../../domain";
+import { ErppayEntity } from "../../domain/entities/erppay-entity";
+import { prisma } from "../../data/sqlserver";
 
 
 
 export class ErppayDatasourceImpl implements ErppayDatasource {
+    
+    async getInfoAccount(account: string): Promise<ErppayEntity> {
+        try {
+            const data:any = await prisma.$queryRaw`EXEC sp_get_info_account_t @cuenta=${account}`;
+            console.log(data);
+            return ErppayEntity.fromObject({account: data[0].cuenta, owner: data[0].propietario, debt: data[0].total})
+        } catch (error) {
+            console.error(error)
+            throw CustomError.internalServer('Internal server error')
+        }
+
+    }
 
 
     async generatePdf(generatePdfDto: GeneratePdfDto): Promise<Buffer> {

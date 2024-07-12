@@ -10,6 +10,10 @@ export class ErppayRepositoryImpl implements ErppayRepository {
         private erppayDatasource: ErppayDatasource
     ){}
 
+    getInfoAccount(account: string): Promise<ErppayEntity> {
+        return this.erppayDatasource.getInfoAccount(account);
+    }
+
     generatePdf(generatePdfDto: GeneratePdfDto): Promise<Buffer> {
         return this.erppayDatasource.generatePdf(generatePdfDto);
     }
