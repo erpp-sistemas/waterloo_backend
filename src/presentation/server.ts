@@ -9,11 +9,8 @@ interface Options {
 export class Server {
 
     public readonly app = express()
-    private readonly port: number;
 
-    constructor(options: Options) {
-        const { port } = options
-        this.port = port;
+    constructor() {
         this.configure()
     }
 
@@ -32,8 +29,5 @@ export class Server {
         this.app.use(router)
     }
 
-    // async start() {
-    //     this.app.listen(this.port, () => console.log(`server listen on port ${this.port}`))
-    // }
 
 }

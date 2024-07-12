@@ -6,6 +6,7 @@ import { RegisterRoutes } from './register/routes';
 import { OficinaEnlaceRoutes } from './oficina-enlace/routes';
 import { NotificationRoutes } from './notification/routes';
 import { AtenderaOficinaEnlaceRoutes } from './atendera-oficina.enlace/routes';
+import { ErppayRoutes } from './erppay/routes';
 
 export class AppRoutes {
 
@@ -20,6 +21,8 @@ export class AppRoutes {
         router.use('/api/oficina-enlace', OficinaEnlaceRoutes.routes)
         router.use('/api/notification', NotificationRoutes.routes)
         router.use('/api/atendera-oficina', AtenderaOficinaEnlaceRoutes.routes)
+
+        router.use('/api/erppay', ErppayRoutes.routes)
 
         return router;
 

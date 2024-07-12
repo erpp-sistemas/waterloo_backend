@@ -12,14 +12,11 @@ import { WssService } from './presentation/services/wss.service';
 
 function main() {
 
-    const server = new Server(
-        { 
-            port: envs.PORT
-         }
-    )
+    const server = new Server()
 
     const httpServer = createServer(server.app);
     WssService.initWss( {server: httpServer} )
+
 
     server.setRoutes( AppRoutes.routes );
 
