@@ -16,7 +16,6 @@ export class ErppayRoutes {
         const erppayController = new ErppayController(erppayRepository);
 
         router.get('/get-infoaccount/:account', erppayController.getInfoAccount)
-        router.post('/generate-pdf', erppayController.generatePdf)
 
 
         return router;

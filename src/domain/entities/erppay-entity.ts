@@ -3,9 +3,9 @@
 export class ErppayEntity {
 
     constructor(
-        private account: string,
-        private owner: string,
-        private debt: number,
+        public account: string,
+        public owner: string,
+        public debt: number,
     ){}
 
     static fromObject( object: { [key: string]: any }): ErppayEntity {

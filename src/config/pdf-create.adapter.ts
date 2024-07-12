@@ -13,7 +13,7 @@ export class PdfCreate {
             });
 
             const page = await browser.newPage();
-            await page.goto(content, {
+            await page.setContent(content, {
                 waitUntil: 'networkidle0', // Esperar hasta que la página esté completamente cargada
             });
 

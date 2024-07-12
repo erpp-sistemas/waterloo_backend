@@ -4,16 +4,16 @@ import { PdfCreate } from '../../config/pdf-create.adapter'
 import { CustomError } from "../../domain";
 import { ErppayEntity } from "../../domain/entities/erppay-entity";
 import { prisma } from "../../data/sqlserver";
+import { edoCta } from '../../templates/erppay'
 
 
 
 export class ErppayDatasourceImpl implements ErppayDatasource {
-    
+
     async getInfoAccount(account: string): Promise<ErppayEntity> {
         try {
-            const data:any = await prisma.$queryRaw`EXEC sp_get_info_account_t @cuenta=${account}`;
-            console.log(data);
-            return ErppayEntity.fromObject({account: data[0].cuenta, owner: data[0].propietario, debt: data[0].total})
+            const data: any = await prisma.$queryRaw`EXEC sp_get_info_account_t @cuenta=${account}`;
+            return ErppayEntity.fromObject({ account: data[0].cuenta, owner: data[0].propietario, debt: data[0].total })
         } catch (error) {
             console.error(error)
             throw CustomError.internalServer('Internal server error')
@@ -26,14 +26,11 @@ export class ErppayDatasourceImpl implements ErppayDatasource {
 
         const { account, owner, debt } = generatePdfDto;
 
-        let content = `
-            <div style="backgroundColor: 'blue',">
-                <h1>Hola, este es un PDF generado en Node.js con Puppeteer!</h1>
-                <h1> la cuenta es ${account} del propietario ${owner} y debe ${debt} </h1>
-            </div>
-        `
+        let content = edoCta(account, owner, debt);
+
         try {
-            const pdf = await PdfCreate.createPdf('https://www.ser0.mx');
+            //const pdf = await PdfCreate.createPdf('https://www.ser0.mx');
+            const pdf = await PdfCreate.createPdf(content);
             return pdf!;
         } catch (error) {
             console.log(error)
