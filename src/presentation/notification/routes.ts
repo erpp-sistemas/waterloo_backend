@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { NotificationController } from "./controller";
-import { NotificationDatasourceImpl } from "../../infrastructure/datasource/notification.datasource.impl";
+import NotificationDatasourceImpl from "../../infrastructure/datasource/notification.datasource.impl";
 import { NotificationRepositoryImpl } from "../../infrastructure/repositories/notification.repository.impl";
 
 
