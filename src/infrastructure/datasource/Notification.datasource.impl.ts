@@ -5,7 +5,7 @@ import { NotificationDto } from "../../domain/dtos/notification/create-notificat
 import { NotificationEntity } from "../../domain/entities/notification.entity";
 
 
-class NotificationDatasourceImpl implements NotificationDatasource {
+export class NotificationDatasourceImpl implements NotificationDatasource {
 
     async updateNotification(id_usuario: number): Promise<string> {
         try {
@@ -76,4 +76,3 @@ class NotificationDatasourceImpl implements NotificationDatasource {
 }
 
 
-export default NotificationDatasourceImpl
