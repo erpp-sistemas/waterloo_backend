@@ -18,7 +18,7 @@ export class Server {
         this.app.use(express.urlencoded({ extended: true }))
         this.app.use(cors({
             //origin: 'http://localhost:5173',
-            origin: ['http://localhost:5173', 'waterloo.mx'],
+            origin: ['http://localhost:5173', 'https://waterloo.mx'],
             credentials: true,
         }))
     }
