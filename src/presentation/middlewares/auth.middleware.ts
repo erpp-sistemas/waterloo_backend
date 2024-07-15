@@ -7,6 +7,9 @@ export class AuthMiddleware {
 
     static async validateToken( req: Request, res: Response, next: NextFunction) {
 
+        console.log("Validando la cookie")
+        console.log(req.cookies);
+
         let { token } = req.cookies
         if(!token) return res.status(401).json('User without authorization');
 

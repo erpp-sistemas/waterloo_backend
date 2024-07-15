@@ -2,9 +2,6 @@ import express, { Router } from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 
-interface Options {
-    port: number
-}
 
 export class Server {
 
@@ -21,7 +18,7 @@ export class Server {
         this.app.use(express.urlencoded({ extended: true }))
         this.app.use(cors({
             //origin: 'http://localhost:5173',
-            origin: 'https://waterloo.mx',
+            origin: ['http://localhost:5173', 'waterloo.mx'],
             credentials: true,
         }))
     }

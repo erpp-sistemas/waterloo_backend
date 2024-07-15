@@ -29,8 +29,8 @@ export class AuthController {
                 let {token, ...user_info} = user
                 res.cookie('token', token, {
                     httpOnly: true, // For security reasons, set HttpOnly to true
-                    //secure: process.env.NODE_ENV === 'production', // Set secure to true in production
-                    sameSite: 'lax', // Helps with CSRF protection
+                    secure: true,
+                    sameSite: 'none', // Helps with CSRF protection
                   });
                 res.json(user_info)
             }).catch(error => res.status(400).json({ error }))
