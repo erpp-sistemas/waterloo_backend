@@ -21,8 +21,8 @@ export class NotificationController {
                 new GetByUser(this.notificationRepository).execute(notification.id_usuario)
                     .then(noti_user => {
                         this.wssService.sendMessage('on-notification-changed', noti_user)
+                        res.json(notification)
                     })
-                res.json(notification)
 
             }).catch(error => {
                 console.error("Error ", error)
