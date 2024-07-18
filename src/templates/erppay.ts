@@ -23,7 +23,7 @@ export function edoCta(account: string, owner: string, debt: number): string {
                     margin: 20px 0;
                 }
                 .image-container img {
-                    max-width: 100%;
+                    max-width: 50%;
                     height: auto;
                 }
                 </style>

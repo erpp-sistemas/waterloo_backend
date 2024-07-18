@@ -16,6 +16,7 @@ export class ErppayRoutes {
         const erppayController = new ErppayController(erppayRepository);
 
         router.get('/get-infoaccount/:account', erppayController.getInfoAccount)
+        router.get('/get-infoaccount-url/:account', erppayController.getInfoAccountStorage)
 
 
         return router;

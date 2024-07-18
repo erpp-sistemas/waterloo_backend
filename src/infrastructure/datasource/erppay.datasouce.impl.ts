@@ -11,14 +11,11 @@ import { edoCta } from '../../templates/erppay'
 export class ErppayDatasourceImpl implements ErppayDatasource {
 
     async getInfoAccount(account: string): Promise<ErppayEntity> {
-        try {
-            const data: any = await prisma.$queryRaw`EXEC sp_get_info_account_t @cuenta=${account}`;
-            return ErppayEntity.fromObject({ account: data[0].cuenta, owner: data[0].propietario, debt: data[0].total })
-        } catch (error) {
-            console.error(error)
-            throw CustomError.internalServer('Internal server error')
-        }
+        const data: any[] = await prisma.$queryRaw`EXEC sp_get_info_account_t @cuenta=${account}`;
 
+        if (data.length === 0) throw CustomError.badRequest('Cuenta no existente');
+
+        return ErppayEntity.fromObject({ account: data[0].cuenta, owner: data[0].propietario, debt: data[0].total })
     }
 
 

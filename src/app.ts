@@ -3,6 +3,7 @@ import { Server } from './presentation/server'
 import { AppRoutes } from './presentation/routes'
 import { createServer } from 'http';
 import { WssService } from './presentation/services/wss.service';
+import { StorageAdapter } from './config/storage.adapter';
 
 
 (() => {
@@ -16,6 +17,7 @@ function main() {
 
     const httpServer = createServer(server.app);
     WssService.initWss( {server: httpServer} )
+    StorageAdapter.initStorage({ bucket_name: 'erppay' });
 
 
     server.setRoutes( AppRoutes.routes );
