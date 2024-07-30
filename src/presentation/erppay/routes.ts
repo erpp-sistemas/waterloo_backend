@@ -17,6 +17,7 @@ export class ErppayRoutes {
 
         router.get('/get-infoaccount/:account', erppayController.getInfoAccount)
         router.get('/get-infoaccount-url/:account', erppayController.getInfoAccountStorage)
+        router.post('/generate-edocta', erppayController.generatePdf)
 
 
         return router;
