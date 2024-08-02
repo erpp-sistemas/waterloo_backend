@@ -18,7 +18,8 @@ export class PdfCreate {
             });
 
             const pdf = await page.pdf({
-                format: 'A4',
+                format: 'letter',    // Formato de papel, en este caso carta
+                landscape: true,     // Orientación horizontal
                 printBackground: true
             });
 
