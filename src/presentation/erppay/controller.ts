@@ -54,7 +54,7 @@ export class ErppayController {
                     const date = new Date();
                     const fecha = date.toISOString();
                     this.storage.uploadFile(pdf, 'estados_cuenta', `${account}-${fecha}.pdf`)
-                        .then(file_url => res.json({
+                        .then(file_url => res.status(200).json({
                             // message: `Tu estado de cuenta se genero con éxito\n${file_url}`  
                             message: file_url
                         }))
