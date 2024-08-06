@@ -2,6 +2,7 @@ import { Router } from "express";
 import { ErppayDatasourceImpl } from "../../infrastructure/datasource/erppay.datasouce.impl";
 import { ErppayRepositoryImpl } from "../../infrastructure/repositories/erppay.repository.impl";
 import { ErppayController } from "./controller";
+import cors from 'cors';
 
 
 
@@ -17,7 +18,7 @@ export class ErppayRoutes {
 
         router.get('/get-infoaccount/:account', erppayController.getInfoAccount)
         router.get('/get-infoaccount-url/:account', erppayController.getInfoAccountStorage)
-        router.post('/generate-edocta', erppayController.generatePdf)
+        router.post('/generate-edocta', cors({origin: '*'}), erppayController.generatePdf)
 
 
         return router;
