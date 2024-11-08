@@ -7,6 +7,10 @@ import { OficinaEnlaceRoutes } from './oficina-enlace/routes';
 import { NotificationRoutes } from './notification/routes';
 import { AtenderaOficinaEnlaceRoutes } from './atendera-oficina.enlace/routes';
 import { ErppayRoutes } from './erppay/routes';
+import { CampanasRoutes } from './campana/routes';
+import { ProcesosRoutes } from './proceso/routes';
+import { ZonaRoutes } from './zona/routes';
+import { ReporteDatosRoutes } from './reporte-datos/routes';
 
 export class AppRoutes {
 
@@ -21,6 +25,10 @@ export class AppRoutes {
         router.use('/api/oficina-enlace', OficinaEnlaceRoutes.routes)
         router.use('/api/notification', NotificationRoutes.routes)
         router.use('/api/atendera-oficina', AtenderaOficinaEnlaceRoutes.routes)
+        router.use('/api/campanas', CampanasRoutes.routes)
+        router.use('/api/procesos', ProcesosRoutes.routes)
+        router.use('/api/zonas', ZonaRoutes.routes)
+        router.use('/api/reportes', ReporteDatosRoutes.routes)
 
         router.use('/api/erppay', ErppayRoutes.routes)
 
