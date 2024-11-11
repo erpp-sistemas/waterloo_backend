@@ -16,10 +16,13 @@ export class Server {
         this.app.use(cookieParser())
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
-        this.app.use(cors({
-            origin: ['http://localhost:5173', 'https://waterloo.mx'],
-            credentials: true,
-        }))
+        const corsOptions = {
+            origin: function (origin: any, callback: any) {
+                callback(null, origin);
+            },
+            credentials: true
+        };
+        this.app.use(cors(corsOptions));
     }
 
     public setRoutes(router: Router) {
