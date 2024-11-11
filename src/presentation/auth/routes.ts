@@ -19,6 +19,8 @@ export class AuthRoutes {
     
         router.post('/register', userController.registerUser)
         router.post('/login', userController.loginUser)
+        router.get('/users-with-campanas', userController.getUsersWithCampanas)
+        router.get('/user-by-id/:user_id', userController.getUserById)
 
         return router;
 

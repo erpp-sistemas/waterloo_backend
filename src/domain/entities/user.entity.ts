@@ -30,7 +30,7 @@ export class UserEntity {
         if (!nombre) throw CustomError.badRequest('Missing nombre');
         if (!apellido_paterno) throw CustomError.badRequest('Missing apellido paterno');
         if (!usuario) throw CustomError.badRequest('Missing usuario');
-        if (!id_rol) throw CustomError.badRequest('Missing id_rol');
+        //if (!id_rol) throw CustomError.badRequest('Missing id_rol');
         //if (!password) throw CustomError.badRequest('Missing password');
 
         return new UserEntity( id, usuario, password, nombre, apellido_paterno, apellido_materno, url_foto, activo, access_app_movil, access_app_web, id_rol, token )

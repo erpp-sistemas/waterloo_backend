@@ -6,8 +6,9 @@ import { UserEntity } from "../entities/user.entity";
 
 export abstract class UserDatasource {
 
-    abstract loginUser(loginUserDto: LoginUserDto): Promise<UserEntity>
-
-    abstract registerUser(registerUser: RegisterUserDto): Promise<UserEntity>
+    abstract loginUser(loginUserDto: LoginUserDto): Promise<UserEntity>;
+    abstract registerUser(registerUser: RegisterUserDto): Promise<UserEntity>;
+    abstract getAllWithCampanas(): Promise<any[]>;
+    abstract getById(user_id: number): Promise<UserEntity>
 
 }

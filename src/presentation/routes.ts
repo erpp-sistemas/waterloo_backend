@@ -11,6 +11,9 @@ import { CampanasRoutes } from './campana/routes';
 import { ProcesosRoutes } from './proceso/routes';
 import { ZonaRoutes } from './zona/routes';
 import { ReporteDatosRoutes } from './reporte-datos/routes';
+import { ServiceMapRoutes } from './service-map/service-map.routes';
+import { LayerRoutes } from './layer/routes';
+import { MobileRoutes } from '../mobile/routes';
 
 export class AppRoutes {
 
@@ -29,6 +32,10 @@ export class AppRoutes {
         router.use('/api/procesos', ProcesosRoutes.routes)
         router.use('/api/zonas', ZonaRoutes.routes)
         router.use('/api/reportes', ReporteDatosRoutes.routes)
+        router.use('/api/services-map', ServiceMapRoutes.routes)
+        router.use('/api/layers', LayerRoutes.routes)
+
+        router.use('/api/mobile', MobileRoutes.routes)
 
         router.use('/api/erppay', ErppayRoutes.routes)
 

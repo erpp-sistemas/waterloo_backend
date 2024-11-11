@@ -123,7 +123,7 @@ model cat_estatus_cita {
 }
 
 model cat_estatus_punto_asistencia {
-  id                                                                                             Int                   @id(map: "PK__cat_esta__3213E83F60D87522") @default(autoincrement())
+  id                                                                                             Int                   @id(map: "PK__cat_esta__3213E83FB59066E0") @default(autoincrement())
   estatus                                                                                        String                @db.NVarChar(100)
   registro_asistencia_registro_asistencia_id_estatus_punto_entradaTocat_estatus_punto_asistencia registro_asistencia[] @relation("registro_asistencia_id_estatus_punto_entradaTocat_estatus_punto_asistencia")
   registro_asistencia_registro_asistencia_id_estatus_punto_salidaTocat_estatus_punto_asistencia  registro_asistencia[] @relation("registro_asistencia_id_estatus_punto_salidaTocat_estatus_punto_asistencia")
@@ -410,6 +410,7 @@ model oficina_enlace {
   comentarios           String?             @db.NVarChar(255)
   id_campana            Int?
   estatus_cita          Int?
+  fecha                 DateTime?           @default(now(), map: "DF__oficina_e__fecha__6E765879") @db.DateTime
   cita_finalizada       cita_finalizada[]
   notifications_web     notifications_web[]
   campanas              campanas?           @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_enlace_campana")
@@ -534,7 +535,7 @@ model registro_seguimiento_gestion {
   tipo                     String?                    @db.NVarChar(100)
   fecha_sincronizacion     DateTime?                  @db.DateTime
   fecha                    DateTime?                  @db.DateTime
-  id_seguimiento           String                     @id(map: "PK__registro__127E9A1AFA2DDC76") @db.NVarChar(100)
+  id_seguimiento           String                     @id(map: "PK__registro__127E9A1A370FF8CD") @db.NVarChar(100)
   foto_seguimiento_gestion foto_seguimiento_gestion[]
   campanas                 campanas?                  @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_seg_campana")
   usuario                  usuario?                   @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_reg_seg_usuario")
@@ -688,13 +689,14 @@ model zona {
 }
 
 model notifications_web {
-  id_notification   Int             @id(map: "PK__notifica__925C842F1AE5A28F") @default(autoincrement())
-  name              String          @default("", map: "DF__notificati__name__316D4A39") @db.NVarChar(255)
-  id_usuario        Int
-  status            Int?            @default(0, map: "DF__notificat__statu__32616E72")
-  fecha             DateTime?       @default(now(), map: "DF__notificat__fecha__335592AB") @db.DateTime
-  id_oficina_enlace Int?
-  oficina_enlace    oficina_enlace? @relation(fields: [id_oficina_enlace], references: [id_oficina_enlace], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_notification")
+  id_notification      Int             @id(map: "PK__notifica__925C842F63A46B03") @default(autoincrement())
+  name                 String          @default("", map: "DF__notificati__name__7152C524") @db.NVarChar(255)
+  id_usuario           Int
+  status               Int?            @default(0, map: "DF__notificat__statu__7246E95D")
+  fecha                DateTime?       @default(now(), map: "DF__notificat__fecha__733B0D96") @db.DateTime
+  id_type_notification Int?
+  id_oficina_enlace    Int?
+  oficina_enlace       oficina_enlace? @relation(fields: [id_oficina_enlace], references: [id_oficina_enlace], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_notification")
 }
 
 model atendera_oficina_enlace {
@@ -706,7 +708,15 @@ model atendera_oficina_enlace {
 }
 
 model cat_type_notification {
-  id_type_notification Int       @id(map: "PK__cat_type__963C765C599A6949") @default(autoincrement())
+  id_type_notification Int       @id(map: "PK__cat_type__963C765C2EA2DFC1") @default(autoincrement())
   type                 String    @db.NVarChar(100)
-  created_at           DateTime? @default(now(), map: "DF__cat_type___creat__3631FF56") @db.DateTime
+  created_at           DateTime? @default(now(), map: "DF__cat_type___creat__0371755F") @db.DateTime
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ps_plain {
+  id       Int     @default(autoincrement())
+  password String? @db.NVarChar(20)
+
+  @@ignore
 }

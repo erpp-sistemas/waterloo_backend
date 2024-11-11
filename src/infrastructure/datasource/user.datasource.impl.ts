@@ -9,7 +9,6 @@ import { RegisterUserDto } from "../../domain/dtos/auth/register-user.dto";
 
 export class UserDatasourceImpl implements UserDatasource {
 
-
     async registerUser(registerUserDto: RegisterUserDto): Promise<UserEntity> {
 
         const user = await prisma.usuario.findFirst({
@@ -54,12 +53,36 @@ export class UserDatasourceImpl implements UserDatasource {
         if (!token) throw CustomError.internalServer('Error while creating JWT');
 
         const data_user: any[] = await prisma.$queryRaw`EXEC sp_get_user_w @id_user=${user.id}`
-        const user_info = data_user[0]; 
-        
+        const user_info = data_user[0];
+
         const { password, ...userEntity } = UserEntity.fromObject({ ...user_info, token });
 
         return UserEntity.fromObject(userEntity)
 
     }
+
+
+    async getAllWithCampanas(): Promise<any[]> {
+        try {
+            const users :any[] = await prisma.$queryRaw`EXEC sp_get_all_users`
+            return users;
+        } catch (error) {
+            console.error(error)
+            throw CustomError.internalServer('Internal server error')
+        }
+    }
+
+    async getById(user_id: number): Promise<UserEntity> {
+        try {
+            const user = await prisma.usuario.findUnique({
+                where: { id: user_id }
+            });
+            return UserEntity.fromObject(user!);
+        } catch (error) {
+            console.error(error)
+            throw CustomError.internalServer('Internal server error')
+        }
+    }
+
 
 }

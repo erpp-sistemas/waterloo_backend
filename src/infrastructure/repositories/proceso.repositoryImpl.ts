@@ -14,7 +14,7 @@ export class ProcesoRepositoryImpl extends ProcesoRepository {
     getAll(): Promise<ProcesoEntity[]> {
         throw new Error("Method not implemented.");
     }
-    getById(): Promise<ProcesoEntity> {
+    getById(proceso_id: number): Promise<ProcesoEntity> {
         throw new Error("Method not implemented.");
     }
     getByCampana(campana_id: number): Promise<ProcesoEntity[]> {

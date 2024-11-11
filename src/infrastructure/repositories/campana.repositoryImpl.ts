@@ -12,8 +12,8 @@ export class CampanaRepositoryImpl implements CampanaRepository {
     getAll(): Promise<CampanaEntity[]> {
         throw new Error("Method not implemented.");
     }
-    getById(): Promise<CampanaEntity> {
-        throw new Error("Method not implemented.");
+    getById(campana_id: number): Promise<CampanaEntity> {
+        return this.datasource.getById(campana_id);
     }
     getByUser(user_id: number): Promise<CampanaEntity[]> {
         return this.datasource.getByUser(user_id);

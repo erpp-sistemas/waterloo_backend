@@ -18,6 +18,7 @@ export class CampanasRoutes {
         const campanaController = new CampanaController(campanaRepository);
 
         router.get('/get-by-user/:user_id', AuthMiddleware.validateToken, campanaController.getByUser)
+        router.get('/get-by-id/:campana_id', AuthMiddleware.validateToken, campanaController.getById)
 
         return router;
 

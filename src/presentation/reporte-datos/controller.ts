@@ -8,7 +8,7 @@ export class ReporteDatosController {
         private readonly repository: ReporteDatosRepository
     ){}
 
-    getReporteDatos = async (req: Request, res: Response) => {
+    getReporteDatos = (req: Request, res: Response) => {
 
         let { campana_id, proceso_id, zona_id, dateInit, dateEnd } = req.params;
         console.log("campana_id", campana_id)

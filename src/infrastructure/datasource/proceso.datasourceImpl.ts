@@ -10,7 +10,7 @@ export class ProcesoDatasourceImpl extends ProcesoDatasource {
     getAll(): Promise<ProcesoEntity[]> {
         throw new Error("Method not implemented.");
     }
-    getById(): Promise<ProcesoEntity> {
+    getById(proceso_id: number): Promise<ProcesoEntity> {
         throw new Error("Method not implemented.");
     }
     

@@ -9,8 +9,18 @@ export class CampanaDatasourceImpl implements CampanaDatasource {
     getAll(): Promise<CampanaEntity[]> {
         throw new Error("Method not implemented.");
     }
-    getById(): Promise<CampanaEntity> {
-        throw new Error("Method not implemented.");
+
+    async getById(campana_id: number): Promise<CampanaEntity> {
+        try {
+            const campana = await prisma.campanas.findUnique({
+                where: { id: campana_id }
+            });
+
+            return CampanaEntity.fromObject(campana!);
+        } catch (error) {
+            console.error(error)
+            throw CustomError.internalServer('Internal server error')
+        }
     }
 
     async getByUser(user_id: number): Promise<CampanaEntity[]> {

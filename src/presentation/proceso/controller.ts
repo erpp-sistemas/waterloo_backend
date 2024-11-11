@@ -10,7 +10,7 @@ export class ProcesoController {
         private procesoRepository: ProcesoRepository
     ) {}
 
-    getByCampana = async (req: Request, res: Response) => {
+    getByCampana = (req: Request, res: Response) => {
 
         let { campana_id } = req.params;
 
