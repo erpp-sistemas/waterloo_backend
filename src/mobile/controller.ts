@@ -54,6 +54,7 @@ export class MobileController {
     }
 
     insertPhotoRegister = (req: Request, res: Response) => {
+        console.log(req.body)
         const { fecha, id_campana, id_contribuyente, id_proceso, id_usuario, imageName, tipo, url_imagen } = req.body;
         this.service.insertPhotoRegister({ fecha, id_campana, id_contribuyente, id_proceso, id_usuario, imageName, tipo, url_imagen })
             .then(message => res.status(200).json({ message }))
