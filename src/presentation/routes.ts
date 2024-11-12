@@ -14,6 +14,7 @@ import { ReporteDatosRoutes } from './reporte-datos/routes';
 import { ServiceMapRoutes } from './service-map/service-map.routes';
 import { LayerRoutes } from './layer/routes';
 import { MobileRoutes } from '../mobile/routes';
+import { ReporteAsistenciaRoutes } from './reporte-asistencia/routes';
 
 export class AppRoutes {
 
@@ -34,6 +35,7 @@ export class AppRoutes {
         router.use('/api/reportes', ReporteDatosRoutes.routes)
         router.use('/api/services-map', ServiceMapRoutes.routes)
         router.use('/api/layers', LayerRoutes.routes)
+        router.use('/api/asistencia', ReporteAsistenciaRoutes.routes)
 
         router.use('/api/mobile', MobileRoutes.routes)
 
