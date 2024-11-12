@@ -1,7 +1,7 @@
 import { Encrypt } from "../config/encrypt.adapter";
 import { prisma } from "../data/sqlserver";
 import { CustomError } from "../domain";
-import { UserLogged, UserCampanaProcesoModulo, RegisterAsistencia, RegisterPhoto, RegisterContribuyente } from "./interfaces";
+import { UserLogged, UserCampanaProcesoModulo, RegisterAsistencia, RegisterPhoto, RegisterContribuyente, RegisterSeguimientoGestion, RecorridoGestor, RegisterPhotoSeguimiento } from "./interfaces";
 
 
 export class MobileService {
@@ -63,7 +63,7 @@ export class MobileService {
     async findContribuyenteByData(nombnre: string, segundo_nombre: string, apellido_paterno: string, apellido_materno: string) {
         try {
             const contribuyente_find: any = await prisma.$queryRaw`EXEC sp_find_contribuyente_by_data @nombre=${nombnre}, @segundo_nombre=${segundo_nombre}, @apellido_paterno=${apellido_paterno}, @apellido_materno=${apellido_materno}`;
-            return contribuyente_find[0];
+            return contribuyente_find;
         } catch (error) {
             console.error(error);
             throw CustomError.internalServer('Internal server error')
@@ -161,15 +161,54 @@ export class MobileService {
         try {
             const { actualizacion_datos, apellido_materno, apellido_paterno, calle, clave_elector, codigo_postal, colonia, contribuyente_nuevo, curp, edad, email, fecha_captura, fecha_nacimiento, id_campana, id_contribuyente, id_proceso, id_usuario, id_zona, latitud, longitud, numero_celular, numero_exterior, numero_interior, numero_local, numero_ninos, observaciones, primer_nombre, seccion_electoral, segundo_nombre, vigencia } = data;
 
-            let params = `'${id_contribuyente}', '${primer_nombre}', '${segundo_nombre}', '${apellido_paterno}', '${apellido_materno}', ${edad}, '${fecha_nacimiento}', '${calle}', '${numero_exterior}', '${numero_interior}', '${colonia}', ${codigo_postal}, '${numero_celular}', '${numero_local}', '${email}', '${clave_elector}', ${seccion_electoral}, ${numero_ninos}, '${observaciones}', '${vigencia}', '${curp}', ${id_proceso}, '${fecha_captura}', ${id_usuario}, ${contribuyente_nuevo}, ${actualizacion_datos}, ${id_campana}, ${latitud}, ${longitud}, ${id_zona} `
+            const res = await prisma.$queryRaw`EXEC sp_insert_registro_contribuyente_m @id_contribuyente=${id_contribuyente}, @primer_nombre=${primer_nombre}, @segundo_nombre=${segundo_nombre}, @apellido_paterno=${apellido_paterno}, @apellido_materno=${apellido_materno}, @edad=${edad}, @fecha_nacimiento=${fecha_nacimiento}, @calle=${calle}, @numero_exterior=${numero_exterior}, @numero_interior=${numero_interior}, @colonia=${colonia}, @codigo_postal=${codigo_postal}, @numero_celular=${numero_celular}, @numero_local=${numero_local}, @email=${email}, @clave_elector=${clave_elector}, @seccion_electoral=${seccion_electoral}, @numero_ninos=${numero_ninos}, @observaciones=${observaciones}, @vigencia=${vigencia}, @curp=${curp}, @id_proceso=${id_proceso}, @fecha_captura=${fecha_captura}, @id_usuario=${id_usuario}, @contribuyente_nuevo=${contribuyente_nuevo}, @actualizacion_datos=${actualizacion_datos}, @id_campana=${id_campana}, @latitud=${latitud}, @longitud=${longitud}, @id_zona =${id_zona}`
 
-            const res = await prisma.$queryRaw`EXEC sp_insert_registro_contribuyente_m ${params}`
-            return 'Registro insertado correctamente'
+            return 'Registro insertado correctamente';
         } catch (error) {
             console.error(error);
             throw CustomError.internalServer('Internal server error')
         }
     }
+
+    async insertRegisterSeguimientoGestion(data: RegisterSeguimientoGestion) {
+        try {
+            const { apellido_materno, apellido_paterno, correo, fecha, id_campana, id_seguimiento, id_usuario, latitud, longitud, nombres, numero_celular, observaciones, tipo } = data;
+
+            const res = await prisma.$queryRaw`EXEC sp_insert_registro_seguimiento_gestion @nombres=${nombres}, @apellido_paterno=${apellido_paterno}, @apellido_materno=${apellido_materno}, @numero_celular=${numero_celular}, @correo=${correo}, @observaciones=${observaciones}, @id_usuario=${id_usuario}, @id_campana=${id_campana}, @latitud=${latitud}, @longitud=${longitud}, @tipo=${tipo}, @fecha=${fecha}, @id_seguimiento=${id_seguimiento}`
+
+            return 'Seguimiento insertado correctamente'
+        } catch (error) {
+            console.error(error);
+            throw CustomError.internalServer('Internal server error')
+        }
+    }
+
+    async insertRecorridoGestor(data: RecorridoGestor) {
+        try {
+            const { fecha, id_usuario, latitud, longitud } = data;
+            console.log(fecha)
+            const new_recorrido = await prisma.recorrido_gestor.create({
+                data: data
+            })
+            return 'Registro de recorrido insertado correctamente'
+        } catch (error) {
+            console.error(error);
+            throw CustomError.internalServer('Internal server error')
+        }
+    }
+
+
+    async insertPhotoSeguimiento(data: RegisterPhotoSeguimiento) {
+        try {
+            const { fecha, id_campana, id_seguimiento, id_usuario, imageName, tipo, url_imagen } = data;
+            const res = await prisma.$queryRaw`EXEC sp_insert_foto_registro @id_seguimiento=${id_seguimiento}, @id_usuario=${id_usuario}, @imageName=${imageName}, @fecha=${fecha}, @tipo=${tipo}, @id_campana=${id_campana}, @url_imagen=${url_imagen}`;
+            return 'Foto seguimiento subida correctamente'
+        } catch (error) {
+            console.error(error);
+            throw CustomError.internalServer('Internal server error')
+        }
+    }
+
 
 
 }

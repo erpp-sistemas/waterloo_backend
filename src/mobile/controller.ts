@@ -91,7 +91,26 @@ export class MobileController {
 
     insertRegister = (req: Request, res: Response) => {
         this.service.insertRegisterContribuyente(req.body)
-            .then( message => res.status(200).json( { message } ))
+            .then(message => res.status(200).json({ message }))
+            .catch(error => res.status(400).json({ error }))
+    }
+
+    insertRegisterSeguimiento = (req: Request, res: Response) => {
+        this.service.insertRegisterSeguimientoGestion(req.body)
+            .then(message => res.status(200).json({ message }))
+            .catch(error => res.status(400).json({ error }))
+    }
+
+    insertRecorridoGestor = (req: Request, res: Response) => {
+        this.service.insertRecorridoGestor(req.body)
+            .then(message => res.status(200).json({ message }))
+            .catch(error => res.status(400).json({ error }))
+    }
+
+    insertPhotoSeguimiento = (req: Request, res: Response) => {
+        const { id_seguimiento, id_campana, id_usuario, imageName, fecha, tipo, url_imagen } = req.body;
+        this.service.insertPhotoSeguimiento({ fecha, id_campana, id_seguimiento, id_usuario, imageName, tipo, url_imagen })
+            .then(message => res.status(200).json({ message }))
             .catch(error => res.status(400).json({ error }))
     }
 

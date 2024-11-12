@@ -17,7 +17,10 @@ export class MobileRoutes {
         router.post('/sign-in', controller.signIn)
         router.post('/register-asistencia', controller.registerAsistencia)
         router.post('/upload-photo', controller.insertPhotoRegister)
+        router.post('/upload-photo-seguimiento', controller.insertPhotoSeguimiento)
         router.post('/insert-register', controller.insertRegister)
+        router.post('/insert-seguimiento-gestion', controller.insertRegisterSeguimiento)
+        router.post('/insert-recorrido', controller.insertRecorridoGestor)
         
         router.put('/update-iduserpush', controller.updateIdUserPush)
         router.put('/delete-push', controller.deletePush)

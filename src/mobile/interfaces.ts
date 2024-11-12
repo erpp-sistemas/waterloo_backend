@@ -76,6 +76,16 @@ export interface RegisterPhoto {
     url_imagen: string;
 }
 
+export interface RegisterPhotoSeguimiento {
+    id_seguimiento: number;
+    id_campana: number;
+    id_usuario: number;
+    imageName: string;
+    fecha: string;
+    tipo: string;
+    url_imagen: string;
+}
+
 export interface RegisterContribuyente {
     id_contribuyente: number;
     primer_nombre: string;
@@ -107,4 +117,28 @@ export interface RegisterContribuyente {
     latitud: number;
     longitud: number;
     id_zona: number;
+}
+
+export interface RegisterSeguimientoGestion {
+    nombres: string;
+    apellido_paterno: string;
+    apellido_materno: string;
+    numero_celular: string;
+    correo: string;
+    observaciones: string;
+    id_usuario: number;
+    id_campana: number;
+    latitud: number;
+    longitud: number;
+    tipo: string;
+    fecha: string;
+    id_seguimiento: number;
+}
+
+
+export interface RecorridoGestor {
+    id_usuario: number;
+    latitud: number;
+    longitud: number;
+    fecha: string;
 }
