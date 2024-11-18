@@ -40,6 +40,14 @@ model asignacion_excel {
   @@ignore
 }
 
+model atendera_oficina_enlace {
+  id_atendera Int       @id(map: "PK__atendera__A973F0FDCF49DB9B") @default(autoincrement())
+  id_usuario  Int?
+  id_campana  Int?
+  campanas    campanas? @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_campana")
+  usuario     usuario?  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_usuario")
+}
+
 model campana_proceso {
   id_campana_proceso Int      @id(map: "PK_id_campana_proceso") @default(autoincrement())
   id_campana         Int
@@ -62,6 +70,14 @@ model campana_servicio_layer_estilo {
   servicios_mapa   servicios_mapa @relation(fields: [id_servicio_mapa], references: [id_servicio_mapa], onUpdate: NoAction, map: "FK_campana_servicio_layer_estilo_ser_mapa")
 }
 
+model campana_template_whatsapp {
+  id                Int                @id(map: "PK__campana___3213E83FB8862D1D") @default(autoincrement())
+  id_campana        Int?
+  id_template       String?            @db.NVarChar(255)
+  campanas          campanas           @relation(fields: [id], references: [id], onUpdate: NoAction, map: "fk_camp_templ")
+  template_whatsapp template_whatsapp? @relation(fields: [id_template], references: [id_template], onDelete: NoAction, onUpdate: NoAction, map: "fk_templ_camp")
+}
+
 model campanas {
   id                            Int                             @id(map: "PK_campanas") @default(autoincrement())
   nombre                        String                          @db.NVarChar(150)
@@ -77,6 +93,7 @@ model campanas {
   atendera_oficina_enlace       atendera_oficina_enlace[]
   campana_proceso               campana_proceso[]
   campana_servicio_layer_estilo campana_servicio_layer_estilo[]
+  campana_template_whatsapp     campana_template_whatsapp?
   horario                       horario                         @relation(fields: [id_horario], references: [id_horario], onUpdate: NoAction, map: "FK_campana_horario")
   campanas_zonas                campanas_zonas[]
   cat_templates_whatsapp        cat_templates_whatsapp[]
@@ -166,6 +183,12 @@ model cat_tipo_template {
   name                   String                   @db.NVarChar(100)
   activo                 Int                      @default(1, map: "DF__cat_tipo___activ__2CBDA3B5")
   cat_templates_whatsapp cat_templates_whatsapp[]
+}
+
+model cat_type_notification {
+  id_type_notification Int       @id(map: "PK__cat_type__963C765C2EA2DFC1") @default(autoincrement())
+  type                 String    @db.NVarChar(100)
+  created_at           DateTime? @default(now(), map: "DF__cat_type___creat__0371755F") @db.DateTime
 }
 
 model cita_finalizada {
@@ -387,6 +410,17 @@ model modulos {
   usuario_campana_procesos usuario_campana_procesos[]
 }
 
+model notifications_web {
+  id_notification      Int             @id(map: "PK__notifica__925C842F63A46B03") @default(autoincrement())
+  name                 String          @default("", map: "DF__notificati__name__7152C524") @db.NVarChar(255)
+  id_usuario           Int
+  status               Int?            @default(0, map: "DF__notificat__statu__7246E95D")
+  fecha                DateTime?       @default(now(), map: "DF__notificat__fecha__733B0D96") @db.DateTime
+  id_type_notification Int?
+  id_oficina_enlace    Int?
+  oficina_enlace       oficina_enlace? @relation(fields: [id_oficina_enlace], references: [id_oficina_enlace], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_notification")
+}
+
 model oficina_enlace {
   id_oficina_enlace     Int                 @id(map: "PK__apoyo__D470E9808F1DCDA9") @default(autoincrement())
   nombres               String?             @db.NVarChar(100)
@@ -436,6 +470,14 @@ model procesos_modulos {
   id_modulo  Int?
   modulos    modulos?  @relation(fields: [id_modulo], references: [id_modulo], onDelete: NoAction, onUpdate: NoAction, map: "FK_procesos_modulos_modulos")
   procesos   procesos? @relation(fields: [id_proceso], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_procesos_modulos_proceso")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ps_plain {
+  id       Int     @default(autoincrement())
+  password String? @db.NVarChar(20)
+
+  @@ignore
 }
 
 model recorrido_gestor {
@@ -582,6 +624,16 @@ model submenu_usuario {
   usuario    usuario? @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_submenu")
 }
 
+model template_whatsapp {
+  id_template               String                      @id(map: "PK__template__97B30205F0DFEAE0") @db.NVarChar(255)
+  nombre                    String?                     @db.VarChar(100)
+  etiqueta                  String?                     @db.VarChar(100)
+  description               String?                     @db.VarChar(255)
+  activo                    Int?                        @default(1, map: "DF__template___activ__3CA9F2BB")
+  created_at                DateTime?                   @default(now(), map: "DF__template___creat__3D9E16F4") @db.DateTime
+  campana_template_whatsapp campana_template_whatsapp[]
+}
+
 model user_session_web {
   id_session    Int       @id(map: "PK__user_ses__A9E494D0D4C19674") @default(autoincrement())
   id_usuario    Int?
@@ -686,37 +738,4 @@ model zona {
   campanas_zonas         campanas_zonas[]
   encargados_zona        encargados_zona[]
   registro_contribuyente registro_contribuyente[]
-}
-
-model notifications_web {
-  id_notification      Int             @id(map: "PK__notifica__925C842F63A46B03") @default(autoincrement())
-  name                 String          @default("", map: "DF__notificati__name__7152C524") @db.NVarChar(255)
-  id_usuario           Int
-  status               Int?            @default(0, map: "DF__notificat__statu__7246E95D")
-  fecha                DateTime?       @default(now(), map: "DF__notificat__fecha__733B0D96") @db.DateTime
-  id_type_notification Int?
-  id_oficina_enlace    Int?
-  oficina_enlace       oficina_enlace? @relation(fields: [id_oficina_enlace], references: [id_oficina_enlace], onDelete: NoAction, onUpdate: NoAction, map: "FK_oficina_notification")
-}
-
-model atendera_oficina_enlace {
-  id_atendera Int       @id(map: "PK__atendera__A973F0FDCF49DB9B") @default(autoincrement())
-  id_usuario  Int?
-  id_campana  Int?
-  campanas    campanas? @relation(fields: [id_campana], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_campana")
-  usuario     usuario?  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_atendera_apoyo_usuario")
-}
-
-model cat_type_notification {
-  id_type_notification Int       @id(map: "PK__cat_type__963C765C2EA2DFC1") @default(autoincrement())
-  type                 String    @db.NVarChar(100)
-  created_at           DateTime? @default(now(), map: "DF__cat_type___creat__0371755F") @db.DateTime
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model ps_plain {
-  id       Int     @default(autoincrement())
-  password String? @db.NVarChar(20)
-
-  @@ignore
 }

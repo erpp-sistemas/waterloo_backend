@@ -15,6 +15,8 @@ import { ServiceMapRoutes } from './service-map/service-map.routes';
 import { LayerRoutes } from './layer/routes';
 import { MobileRoutes } from '../mobile/routes';
 import { ReporteAsistenciaRoutes } from './reporte-asistencia/routes';
+import { TemplateWhatsappRoutes } from './template-whatsapp/routes';
+import { WhatsappRoutes } from '../whatsapp/routes';
 
 export class AppRoutes {
 
@@ -36,7 +38,9 @@ export class AppRoutes {
         router.use('/api/services-map', ServiceMapRoutes.routes)
         router.use('/api/layers', LayerRoutes.routes)
         router.use('/api/asistencia', ReporteAsistenciaRoutes.routes)
+        router.use('/api/templates', TemplateWhatsappRoutes.routes)
 
+        router.use('/api/whatsapp', WhatsappRoutes.routes)
         router.use('/api/mobile', MobileRoutes.routes)
 
         router.use('/api/erppay', ErppayRoutes.routes)
